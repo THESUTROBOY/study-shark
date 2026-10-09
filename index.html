@@ -2279,7 +2279,8 @@
   //   TIENDA DEL TIBURÓN · monedas, especiales y personalización
   // =====================================================
   const SHOPKEY = 'sharkFocus.shop.v1';
-  const shop = Object.assign({ coins: 0, inv: { monster: 0, porro: 0 }, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, load(SHOPKEY, {}));
+  const START_COINS = 3;   // quien parte desde cero recibe 3 monedas
+  const shop = Object.assign({ coins: START_COINS, inv: { monster: 0, porro: 0 }, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, load(SHOPKEY, {}));
   shop.inv = Object.assign({ monster: 0, porro: 0 }, shop.inv);
   const saveShop = () => store(SHOPKEY, shop);
   function hexMix(a, b, t) {
@@ -2664,7 +2665,7 @@
     else if (k === SHOPKEY) {
       const d = v || {};
       for (const key of Object.keys(shop)) delete shop[key];
-      Object.assign(shop, { coins: 0, inv: { monster: 0, porro: 0 }, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, d);
+      Object.assign(shop, { coins: START_COINS, inv: { monster: 0, porro: 0 }, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, d);
       shop.inv = Object.assign({ monster: 0, porro: 0 }, d.inv);
       if (!BOARDS[shop.board]) shop.board = 'clasica';
       if (!SHORTS[shop.shorts]) shop.shorts = 'clasico';
