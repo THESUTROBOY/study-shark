@@ -232,12 +232,14 @@
 
   /* ---------- Barra de músculo ---------- */
   .musclebar {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; flex-direction: column; align-items: stretch; gap: 6px;
     width: min(92vw, 560px); padding: 12px 18px; border-radius: 18px;
     background: var(--card); border: 1px solid var(--border);
     backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
     font-size: .9rem; transition: background-color 1s var(--ease);
   }
+  .mb-title { font-size: .66rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); line-height: 1; }
+  .mb-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .musclebar b { font-weight: 700; white-space: nowrap; }
   .musclebar b.bump { animation: bump .6s var(--spring); display: inline-block; }
   .meter { flex: 1; height: 7px; border-radius: 4px; background: color-mix(in srgb, var(--text) 12%, transparent); overflow: hidden; }
@@ -499,7 +501,8 @@
     .controls { width: 100%; }
     .controls button { flex: 1; justify-content: center; padding: 14px 18px; }
     #main { min-width: 0; flex: 1.6; }
-    .musclebar { padding: 10px 14px; font-size: .84rem; gap: 10px; }
+    .musclebar { padding: 10px 14px; font-size: .84rem; gap: 5px; }
+    .mb-row { gap: 10px; }
     .stat { padding: 11px 13px; }
     .stat .val { font-size: 1.2rem; }
     .modal { padding: 18px 16px 20px; border-radius: 22px; }
@@ -538,7 +541,9 @@
     .side-clock .card .lab { font-size: 2.9cqw; left: 2cqw; bottom: 1.6cqw; }
     .side-clock .flipclock.h3 .card { width: 15.5cqw; height: 22cqw; font-size: 19.5cqw; }
     .side-clock .sub { font-size: 4.3cqw; margin-top: 1.4cqw; opacity: .9; color: var(--text); text-shadow: none; }
-    .musclebar { grid-area: muscle; width: 100%; padding: 8px 14px; font-size: .82rem; }
+    .musclebar { grid-area: muscle; width: 100%; padding: 7px 14px; font-size: .82rem; gap: 3px; }
+    .mb-title { font-size: .6rem; }
+    .mb-row { gap: 10px; }
     .controls { grid-area: ctrl; width: 100%; }
     .controls button { padding: 10px 12px; font-size: .9rem; gap: 6px; flex: 1; justify-content: center; white-space: nowrap; }
     #main { min-width: 0; flex: 1.6; }
@@ -742,16 +747,10 @@
         </g>
 
         <g id="partyBack" opacity="0">
-          <rect id="partyDim" x="-60" y="-60" width="520" height="520" fill="#1b0716" opacity=".5"/>
-          <g id="beams" style="mix-blend-mode: screen"></g>
+          <rect id="partyDim" x="-60" y="-60" width="520" height="520" fill="#0a0614" opacity=".5"/>
           <g id="refl"></g>
-          <g id="discoBall">
-            <line x1="0" y1="-120" x2="0" y2="-15" stroke="#8e8e93" stroke-width="1.2"/>
-            <clipPath id="ballClip"><circle r="15"/></clipPath>
-            <circle r="15" fill="url(#steel)"/>
-            <g clip-path="url(#ballClip)" id="ballFacets"></g>
-            <circle r="15" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
-          </g>
+          <g id="beams" style="mix-blend-mode: screen"></g>
+          <rect id="strobe" x="-60" y="-60" width="520" height="520" fill="#ffffff" opacity="0"/>
         </g>
         <g id="aura" opacity="0"><ellipse id="auraE" cx="228" cy="178" rx="100" ry="72" fill="url(#auraG)"/></g>
 
@@ -901,8 +900,8 @@
           <ellipse class="hz h3" cx="230" cy="220" rx="170" ry="70" fill="url(#hazeG)"/>
           <ellipse class="hz h4" cx="80" cy="250" rx="120" ry="55" fill="url(#hazeG)"/>
         </g>
-        <g id="cheer"></g>
-        <g id="dancers"></g>
+        <g id="og" opacity="0"></g>
+        <g id="dj" opacity="0"></g>
         <g id="parts"></g>
 
         <g class="beach-only">
@@ -928,9 +927,12 @@
 
   <div class="side-clock" id="sideClock"></div>
   <div class="musclebar reveal" style="animation-delay:.18s">
-    <span>💪</span><b id="level">Pez flaco</b>
-    <div class="meter"><i id="meter"></i></div>
-    <span class="kg" id="kg">20 kg</span>
+    <div class="mb-title">Crecimiento del Shark</div>
+    <div class="mb-row">
+      <span>💪</span><b id="level">Perra flaca</b>
+      <div class="meter"><i id="meter"></i></div>
+      <span class="kg" id="kg">20 kg</span>
+    </div>
   </div>
 
   <div class="controls reveal" style="animation-delay:.26s">
@@ -1209,7 +1211,7 @@
 
   // ---------- Músculos ----------
   const muscle = t => 1 - Math.exp(-t / 1500);
-  const LEVELS = [[.12, 'Pez flaco'], [.3, 'Principiante'], [.5, 'Marcado'], [.7, 'Culturista'], [.88, 'Mr. Olympia'], [2, 'Megalodón']];
+  const LEVELS = [[.12, 'Perra flaca'], [.3, 'Principiante'], [.5, 'Marcado'], [.7, 'Culturista'], [.88, 'Mr. Olympia'], [2, 'Megalodón']];
   const levelName = m => LEVELS.find(l => m < l[0])[1];
   let lastLevel = '';
 
@@ -1285,7 +1287,7 @@
    'bubble', 'bubbleRect', 'bubbleTail', 'bubbleText', 'cam', 'bigWave', 'bwBody', 'bwShade', 'bwLip', 'bwFoam', 'bwFace', 'bwWhite', 'bigWaveFront', 'bwLipF', 'bwFoamF',
    'boardDeck', 'boardDeco', 'boardS1', 'boardS2', 'aura', 'auraE', 'lid', 'beanie', 'zoomLines', 'item', 'can', 'canBody',
    'joint', 'ember', 'canFly', 'haze',
-   'shaker', 'shakerBody', 'syringe', 'synLiquid', 'synPlunger', 'flame', 'cheer', 'partyBack', 'partyDim', 'beams', 'refl', 'discoBall', 'ballFacets', 'dancers'].forEach(id => el[id] = $(id));
+   'shaker', 'shakerBody', 'syringe', 'synLiquid', 'synPlunger', 'flame', 'og', 'partyBack', 'partyDim', 'beams', 'refl', 'strobe', 'dj'].forEach(id => el[id] = $(id));
   const D = (id, d) => el[id].setAttribute('d', d);
   const C = (id, p, r) => { const e = el[id]; e.setAttribute('cx', f1(p.x)); e.setAttribute('cy', f1(p.y)); e.setAttribute('r', f1(Math.max(0, r))); };
   const O = (id, o) => el[id].setAttribute('opacity', clamp(o, 0, 1).toFixed(2));
@@ -2414,10 +2416,17 @@
   // =====================================================
   const SHOPKEY = 'sharkFocus.shop.v1';
   const START_COINS = 3;   // quien parte desde cero recibe 3 monedas
-  const INV0 = { monster: 0, porro: 0, cheer: 0, protein: 0, roids: 0, party: 0 };
+  const INV0 = { monster: 0, porro: 0, og: 0, dj: 0, protein: 0, roids: 0 };
   const shop = Object.assign({ coins: START_COINS, inv: { ...INV0 }, protein: 0, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, load(SHOPKEY, {}));
   shop.inv = Object.assign({ ...INV0 }, shop.inv);
   const saveShop = () => store(SHOPKEY, shop);
+  // especiales retirados (porristas y fiesta): se devuelven sus monedas
+  function migrateInv() {
+    let ch = false;
+    for (const k of ['cheer', 'party']) if (k in shop.inv) { shop.coins += 3 * (shop.inv[k] || 0); delete shop.inv[k]; ch = true; }
+    return ch;
+  }
+  if (migrateInv()) saveShop();
   function hexMix(a, b, t) {
     const ch = h => { const v = parseInt(h.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
     const A = ch(a), B = ch(b);
@@ -2447,8 +2456,8 @@
   const SPECIALS = {
     monster: { name: 'Lata energética', price: 3, desc: 'Prueba un boost de energía.' },
     porro:   { name: 'Porro',           price: 3, desc: 'Vuela por un rato.' },
-    cheer:   { name: 'Porristas',       price: 3, desc: 'Llegan a animarlo y entrena con más ganas por 45 s.' },
-    party:   { name: 'Fiesta playera',  price: 3, desc: 'Luces, bola disco, música y baile en bikini por 45 s.' },
+    og:      { name: 'Don Morsa OG',    price: 5, desc: 'Llega Don Morsa, un OG de la costa oeste, a fumar contigo con beat G-funk por 45 s.' },
+    dj:      { name: 'Modo DJ',         price: 3, desc: 'Llega un DJ y todo se vuelve rave: láseres y tech house por 45 s.' },
     protein: { name: 'Proteína',        price: 3, desc: 'Músculo permanente: como si hubiera estudiado 10 min más.' },
     roids:   { name: 'Anabólicos',      price: 3, desc: 'Un pinchazo y crece muchísimo… pero a los 45 s se desinfla.' },
   };
@@ -2471,11 +2480,11 @@
   const canSVG = '<svg viewBox="-30 -14 60 28"><g transform="rotate(-12)"><rect x="-6" y="-11" width="12" height="22" rx="3" fill="#f4f6f8" stroke="#9aa3ad" stroke-width=".9"/><ellipse cx="0" cy="-11" rx="6" ry="1.7" fill="#c9cfd6"/><rect x="-6" y="-4.5" width="12" height="2.4" fill="#2ec4b6"/><path d="M-2.8 6 L.2 -.6 L2.8 6 Z" fill="#1d1d1f"/></g><text x="16" y="4" font-size="9" fill="#fff" font-weight="800" font-family="Inter, sans-serif">⚡</text></svg>';
   const jointSVG = '<svg viewBox="-30 -14 60 28"><g transform="rotate(-14) scale(1.6)"><path d="M-6 -1.3 L10 -2 L10 2 L-6 1.3 Z" fill="#f3efe6"/><rect x="-7" y="-1.4" width="3" height="2.8" rx=".6" fill="#d9a066"/><circle cx="10.6" r="2" fill="#ff6a00"/></g><circle cx="22" cy="-7" r="3" fill="#cfd3d6" opacity=".6"/><circle cx="25" cy="-11" r="4" fill="#cfd3d6" opacity=".4"/></svg>';
 
-  const pomSVG = '<svg viewBox="-30 -14 60 28"><g transform="translate(-9 0)"><circle r="9" fill="#e03a3e"/><circle cx="-4" cy="-4" r="5" fill="#fff"/><circle cx="4.5" cy="3" r="5" fill="#ffd60a"/><circle cx="-3" cy="5" r="4.5" fill="#e03a3e"/><circle cx="5" cy="-4" r="4" fill="#fff"/></g><g transform="translate(11 2) scale(.8)"><circle r="9" fill="#fff"/><circle cx="-4" cy="-4" r="5" fill="#e03a3e"/><circle cx="4.5" cy="3" r="5" fill="#e03a3e"/><circle cx="5" cy="-4" r="4" fill="#ffd60a"/></g><text x="22" y="-6" font-size="8" fill="#fff">📣</text></svg>';
   const shakerSVG = '<svg viewBox="-30 -16 60 32"><g transform="rotate(-10) scale(1.05)"><path d="M-6.5 -8 L6.5 -8 L5.6 11 Q5.4 13 3.4 13 L-3.4 13 Q-5.4 13 -5.6 11 Z" fill="#2a2a2e" stroke="#55555c" stroke-width=".8"/><rect x="-7" y="-13" width="14" height="5.5" rx="1.6" fill="#e03a3e"/><rect x="-2" y="-16" width="4" height="3.4" rx="1" fill="#e03a3e"/><rect x="-5.6" y="-1.5" width="11.2" height="6" rx="1" fill="#f5f5f7"/><text x="0" y="3.2" text-anchor="middle" font-family="Inter, sans-serif" font-size="4.2" font-weight="900" fill="#1d1d1f">PROT</text></g><text x="13" y="4" font-size="9">💪</text></svg>';
   const syringeSVG = '<svg viewBox="-30 -16 60 32"><g transform="rotate(55) scale(.95)"><rect x="-.45" y="6" width=".9" height="11" fill="#c7ccd1"/><rect x="-3.4" y="-14" width="6.8" height="20.5" rx="1.4" fill="rgba(230,245,255,.6)" stroke="#9aa7b2" stroke-width=".8"/><rect x="-2.7" y="-6" width="5.4" height="11.8" rx=".8" fill="#46e07a"/><rect x="-.9" y="-25" width="1.8" height="12" fill="#8e98a2"/><rect x="-4.6" y="-26.5" width="9.2" height="2.4" rx="1" fill="#6e7882"/><rect x="-6" y="-14.6" width="12" height="1.8" rx=".9" fill="#9aa7b2"/></g></svg>';
-  const discoSVG = '<svg viewBox="-30 -16 60 32"><path d="M-30 16 L-6 -4 L-2 16 Z" fill="#ff2d3a" opacity=".35"/><path d="M30 16 L6 -4 L2 16 Z" fill="#2ec4b6" opacity=".35"/><line x1="0" y1="-16" x2="0" y2="-12" stroke="#aaa"/><circle cy="-2" r="10" fill="#c7ccd1"/><g fill="#fff" opacity=".8"><rect x="-6" y="-8" width="3" height="3"/><rect x="0" y="-6" width="3" height="3"/><rect x="-3" y="-1" width="3" height="3"/><rect x="3" y="1" width="3" height="3"/></g><text x="13" y="-6" font-size="8">🌴</text></svg>';
-  const SP_ICONS = { monster: canSVG, porro: jointSVG, cheer: pomSVG, protein: shakerSVG, roids: syringeSVG, party: discoSVG };
+  const ogSVG = '<svg viewBox="-30 -18 60 36"><ellipse cx="-3" cy="2" rx="12" ry="11" fill="#9a7a62"/><path d="M-5.6 9 Q-6.6 14 -5.2 18 Q-3.9 14 -4 9Z" fill="#fff8e6"/><path d="M-.4 9 Q.6 14 -.8 18 Q-2.1 14 -2 9Z" fill="#fff8e6"/><circle cx="-7.2" cy="6" r="4.8" fill="#c7a68a"/><circle cx="1.2" cy="6" r="4.8" fill="#c7a68a"/><ellipse cx="-3" cy="2.4" rx="2.6" ry="1.8" fill="#3a2a20"/><rect x="-12.2" y="-3.6" width="8" height="3.4" rx=".8" fill="#111"/><rect x="-2" y="-3.6" width="8" height="3.4" rx=".8" fill="#111"/><path d="M-17.5 -5.6 Q-3 -2.4 11.5 -5.6 L9 -8.4 Q-3 -6.4 -15 -8.4Z" fill="#256e3d"/><path d="M-13 -7.8 Q-12.5 -16.5 -3 -16.8 Q6.5 -16.5 7 -7.8 Q-3 -6.2 -13 -7.8Z" fill="#2f8f4e"/><g transform="translate(16 9) rotate(-20)"><rect x="-6" y="-1.1" width="12" height="2.2" rx="1" fill="#f3efe6"/><circle cx="6.4" r="1.6" fill="#ff6a00"/></g><circle cx="25" cy="-2" r="2.6" fill="#cfd3d6" opacity=".55"/><circle cx="27" cy="-8" r="3.4" fill="#cfd3d6" opacity=".35"/></svg>';
+  const djSVG = '<svg viewBox="-30 -16 60 32"><path d="M-30 -16 L-4 6" stroke="#39ff14" stroke-width="1.2" opacity=".8"/><path d="M30 -16 L4 6" stroke="#ff2bd6" stroke-width="1.2" opacity=".8"/><path d="M-14 4 Q-14 -12 0 -12 Q14 -12 14 4" stroke="#2c2c33" stroke-width="3" fill="none"/><rect x="-17.5" y="0" width="7" height="11" rx="3.2" fill="#1d1d1f" stroke="#00e5ff" stroke-width="1"/><rect x="10.5" y="0" width="7" height="11" rx="3.2" fill="#1d1d1f" stroke="#00e5ff" stroke-width="1"/></svg>';
+  const SP_ICONS = { monster: canSVG, porro: jointSVG, og: ogSVG, dj: djSVG, protein: shakerSVG, roids: syringeSVG };
   let shopTab = 'esp';
   const canUseSpecial = () => S.mode === 'study' && !SPc && trans.u >= 1;
   function updateCoins(b) {
@@ -2577,8 +2586,8 @@
     boost: new Spr(0, 20, 9), haze: new Spr(0, 3, 3.4), beanie: new Spr(0, 140, 11), itemV: new Spr(0, 120, 22),
     jm: new Spr(0, 40, 12.6), ember: new Spr(.4, 60, 15),
     cb: new Spr(0, 160, 25), sip: new Spr(0, 60, 15.5), pump: new Spr(0, 70, 8.5), aura: new Spr(0, 20, 9),
-    inj: new Spr(0, 70, 16), flex: new Spr(0, 55, 13), plunger: new Spr(0, 30, 11), cheerIn: new Spr(0, 22, 8.6),
-    party: new Spr(0, 6, 4.6), danceIn: new Spr(0, 20, 8.2), ball: new Spr(0, 30, 9),
+    inj: new Spr(0, 70, 16), flex: new Spr(0, 55, 13), plunger: new Spr(0, 30, 11), ogIn: new Spr(0, 20, 8.4),
+    rave: new Spr(0, 6, 4.6), djIn: new Spr(0, 20, 8.2),
     prot: new Spr((shop.protein || 0) * 600, 6, 4.9),
   };
   function startSpecial(type) {
@@ -2598,11 +2607,28 @@
     } else SPc = null;
   }
   const inR = (t, a, b) => t > a && t < b;
+  const OG_D = 2.4;   // el OG llega caminando y a los 2,4 s prende
+  // secuencia de fumar del tiburón (porro y OG), desplazada D segundos
+  function smokeTimeline(o, T, f, D, end) {
+    o.sg = inR(T, D + .05, D + 5) ? 0 : 1;
+    o.hm = inR(T, D + .8, D + 4.4) ? 1 : 0;
+    o.item = inR(T, D + .7, end + .3) ? 'joint' : null;
+    o.mouth = T >= D + 4.4 ? 1 : 0;
+    const drag = inR(T, D + 1.6, D + 2.2) || inR(T, D + 3, D + 3.6);
+    o.ember = drag ? 1 : .45;
+    o.tilt = drag ? -.14 : 0;
+    for (const [k, at] of [['e1', D + 2.35], ['e2', D + 3.75]]) if (T > at && !f[k]) { f[k] = true; f.exhale = .8; }
+    if (T > D + .95 && !f.lit) { f.lit = true; sfx('lighter'); }
+    o.flame = inR(T, D + 1.17, D + 1.75) ? 1 : 0;
+    if (T > D + 2.55 && !f.cough) { f.cough = true; sfx('cough'); f.coughT = 0; }
+    o.haze = inR(T, D + 5, end) ? 1 : 0;
+    o.speed = inR(T, D + 5.5, end) ? .75 : 1;
+  }
   const SP_TOTAL = 45, REST_BONUS = 15;   // 45 s en total; +15 s si pasa a descansar
   function specialFrame(dt) {
     const o = { sg: 1, hm: 0, tilt: 0, drink: 0, speed: 1, boost: 0, aura: 0, pump: 0, plates: false, cb: 0, beatN: 0, beatF: 0,
                 impact: null, sip: 0, haze: 0, beanie: 0, item: null, mouth: 0, ember: .4, crush: 0,
-                pumpTo: 1.55, auraCol: 'red', inj: 0, plunger: 0, flex: 0, cheer: 0, party: 0, flame: 0, sparkle: false, deflate: false };
+                pumpTo: 1.55, auraCol: 'red', inj: 0, plunger: 0, flex: 0, og: 0, ogLight: false, rave: 0, flame: 0, sparkle: false, deflate: false };
     if (!SPc) return o;
     SPc.t += dt; SPc.T += dt;
     const t = SPc.t, T = SPc.T, f = SPc.f;
@@ -2619,12 +2645,8 @@
         o.aura = T < L - 2.2 ? .45 : 0;
         return o;
       }
-      if (SPc.type === 'cheer') {
-        o.cheer = T < L - 1.6 ? 1 : 0;
-        return o;
-      }
-      if (SPc.type === 'party') {
-        o.party = T < L - 1.8 ? 1 : 0;
+      if (SPc.type === 'dj') {
+        o.rave = T < L - 1.8 ? 1 : 0;
         return o;
       }
       if (SPc.type === 'monster') {
@@ -2638,16 +2660,18 @@
           o.drink = sips.some(([a, b]) => inR(t, a + .55, b - .25)) ? 1 : 0;
         }
         if (T > L - 2 && !f.rtoss) { f.rtoss = true; canFlight = { x: lastHand.x, y: lastHand.y, vx: -140, vy: -260, r: 0, t: 0 }; }
-      } else {
-        o.beanie = T < L - 1.5 ? 1 : 0;
+      } else {                                   // porro u OG: sigue fumando en la playa
+        const og = SPc.type === 'og';
+        o.beanie = !og && T < L - 1.5 ? 1 : 0;
+        if (og) o.og = T < L - 1.6 ? 1 : 0;
         o.item = T < L - 1.7 ? 'joint' : null;
         o.mouth = 1;
         o.ember = inR(t % 9, .9, 1.7) ? 1 : .45;
         const k = Math.floor((t - 1.8) / 9);
         if (t > 1.8 && T < L - 3 && !f['rex' + k]) { f['rex' + k] = true; f.exhale = .8; }
         o.haze = T < L - 2 ? .6 : 0;
-        if (t > 1.2 && T < L - 6 && !f.rs1) { f.rs1 = true; showBubble('TRANQUI… 🌿', 3); }
-        if (T > L - 3.5 && !f.s2) { f.s2 = true; showBubble('QUÉ PAZ 😌', 3); }
+        if (!og && t > 1.2 && T < L - 6 && !f.rs1) { f.rs1 = true; showBubble('TRANQUI… 🌿', 3); }
+        if (!og && T > L - 3.5 && !f.s2) { f.s2 = true; showBubble('QUÉ PAZ 😌', 3); }
       }
       return o;
     }
@@ -2683,16 +2707,17 @@
       if (T > 4.9 && !f.s1) { f.s1 = true; toast('💉 ¡Modo bestia!', 1500); }
       return o;
     }
-    if (SPc.type === 'party') {
-      o.party = T < 43.2 ? 1 : 0;
-      o.speed = inR(T, 1.5, 43.2) ? 1.5 : 1;
-      if (T > 1.2 && !f.s1) { f.s1 = true; toast('🪩 ¡Fiesta playera!', 1800); }
+    if (SPc.type === 'dj') {
+      o.rave = T < 43.4 ? 1 : 0;
+      o.speed = inR(T, 2, 43.4) ? 1.6 : 1;
+      if (T > 1.6 && !f.s1) { f.s1 = true; toast('🎧 ¡Modo rave!', 1800); }
       return o;
     }
-    if (SPc.type === 'cheer') {
-      o.cheer = T < 43.4 ? 1 : 0;
-      o.speed = inR(T, 1.2, 43.4) ? 1.7 : 1;
-      if (T > 1.4 && !f.s1) { f.s1 = true; toast('📣 ¡Llegaron las porristas!', 1800); }
+    if (SPc.type === 'og') {
+      o.og = T < 43.6 ? 1 : 0;
+      o.ogLight = inR(T, OG_D + .5, OG_D + 1.9);
+      smokeTimeline(o, T, f, OG_D, 43);
+      if (T > 1.4 && !f.s1) { f.s1 = true; toast('🌴 Llegó Don Morsa', 1800); }
       return o;
     }
     if (SPc.type === 'monster') {
@@ -2721,210 +2746,384 @@
       o.speed = o.boost ? 3 : 1;
       if (T > 5.7 && !f.s1) { f.s1 = true; toast('⚡ ¡Boost!', 1500); }
     } else {
-      o.sg = inR(T, .05, 5) ? 0 : 1;
       o.beanie = inR(T, .3, 43.5) ? 1 : 0;
-      o.hm = inR(T, .8, 4.4) ? 1 : 0;
-      o.item = inR(T, .7, 43.3) ? 'joint' : null;
-      o.mouth = T >= 4.4 ? 1 : 0;
-      const drag = inR(T, 1.6, 2.2) || inR(T, 3, 3.6);
-      o.ember = drag ? 1 : .45;
-      o.tilt = drag ? -.14 : 0;
-      for (const [k, at] of [['e1', 2.35], ['e2', 3.75]]) if (T > at && !f[k]) { f[k] = true; f.exhale = .8; }
-      if (T > .95 && !f.lit) { f.lit = true; sfx('lighter'); }
-      o.flame = inR(T, 1.17, 1.75) ? 1 : 0;
-      if (T > 2.55 && !f.cough) { f.cough = true; sfx('cough'); f.coughT = 0; }
-      o.haze = inR(T, 5, 43) ? 1 : 0;
-      o.speed = inR(T, 5.5, 43) ? .75 : 1;
+      smokeTimeline(o, T, f, 0, 43);
       if (T > 5.6 && !f.s1) { f.s1 = true; showBubble('TRANQUI… 🌿', 3); }
       if (T > 41.5 && !f.s2) { f.s2 = true; showBubble('QUÉ PAZ 😌', 3); }
     }
     return o;
   }
 
-  // ---------- Porristas ----------
-  const POM = '<circle r="7" fill="#e03a3e"/><circle cx="-3.2" cy="-3" r="4.2" fill="#fff"/><circle cx="3.6" cy="2.6" r="4.2" fill="#ffd60a"/><circle cx="-2.2" cy="4.2" r="3.6" fill="#e03a3e"/><circle cx="4" cy="-3.4" r="3.2" fill="#fff"/>';
-  function cheerMarkup(skin, hair) {
-    const arm = side => `<g class="arm${side}" transform="translate(${side === 'L' ? -10 : 10} -66)"><rect x="-2.6" y="-1" width="5.2" height="24" rx="2.6" fill="${skin}"/><g class="pom" transform="translate(0 25)">${POM}</g></g>`;
-    const leg = side => `<g class="leg${side}" transform="translate(${side === 'L' ? -4.5 : 4.5} -33)"><rect x="-3.3" y="0" width="6.6" height="30" rx="3.3" fill="${skin}"/><rect x="-4.8" y="26" width="9.6" height="6.5" rx="3" fill="#fff"/><rect x="-4.8" y="26" width="9.6" height="1.6" fill="#e03a3e"/></g>`;
-    return `<ellipse class="sh" cx="0" cy="1" rx="15" ry="3" fill="#000" opacity=".22"/>
-      <g class="fig">
-        ${leg('L')}${leg('R')}
-        <path d="M-12 -46 L12 -46 L17 -31 L-17 -31 Z" fill="#e03a3e"/>
-        <path d="M-17 -31 L17 -31 L16.4 -28.8 L-16.4 -28.8 Z" fill="#fff"/>
-        <path d="M-6 -46 L-8.5 -31 M0 -46 L0 -31 M6 -46 L8.5 -31" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
-        <path d="M-10 -68 Q0 -71 10 -68 L9.6 -45 L-9.6 -45 Z" fill="#e03a3e"/>
-        <path d="M-10 -68 L0 -60.5 L10 -68" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/>
-        <text x="0" y="-49" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="900" fill="#fff">S</text>
-        <rect x="-2.6" y="-75" width="5.2" height="8" fill="${skin}"/>
-        ${arm('L')}${arm('R')}
-        <g class="head" transform="translate(0 -84)">
-          <g class="pony"><path d="M6 -7 C19 -5 21 8 15 17 C13 9 9.5 2.5 4 .5 Z" fill="${hair}"/></g>
-          <circle r="10.2" fill="${skin}"/>
-          <path d="M-10.8 0 C-11.5 -13 11.5 -13 10.8 0 C7.5 -6.5 -7.5 -6.5 -10.8 0 Z" fill="${hair}"/>
-          <path d="M5 -8.5 l4.5 -3.2 l.6 4.2 Z M5 -8.5 l3.6 2.8 l-4.4 1.4 Z" fill="#e03a3e"/>
-          <ellipse cx="-3.7" cy="1.2" rx="1.25" ry="1.5" fill="#1d1d1f"/><ellipse cx="3.7" cy="1.2" rx="1.25" ry="1.5" fill="#1d1d1f"/>
-          <path d="M-3.2 5 Q0 8.2 3.2 5" stroke="#b5384a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-          <circle cx="-6.6" cy="4.2" r="1.9" fill="#ff8fa3" opacity=".45"/><circle cx="6.6" cy="4.2" r="1.9" fill="#ff8fa3" opacity=".45"/>
-        </g>
+  // ---------- utilidades para los invitados ----------
+  // brazo/pierna de 2 segmentos: devuelve codo y mano (bend = ±1 elige el lado del codo)
+  function ik2(sx, sy, tx, ty, L1, L2, bend) {
+    let dx = tx - sx, dy = ty - sy, d = Math.hypot(dx, dy) || .01;
+    const dm = clamp(d, Math.abs(L1 - L2) + .01, L1 + L2 - .01);
+    dx *= dm / d; dy *= dm / d;
+    const a = Math.atan2(dy, dx), c = clamp((L1 * L1 + dm * dm - L2 * L2) / (2 * L1 * dm), -1, 1), k = Math.acos(c) * bend;
+    return { ex: sx + Math.cos(a + k) * L1, ey: sy + Math.sin(a + k) * L1, hx: sx + dx, hy: sy + dy };
+  }
+  const pts = (...p) => p.map(q => f1(q[0]) + ',' + f1(q[1])).join(' ');
+  const easeTo = (cur, tgt, dt, k) => { const u = 1 - Math.exp(-dt * k); cur.x += (tgt.x - cur.x) * u; cur.y += (tgt.y - cur.y) * u; };
+  function mkGuest(parent, html) {
+    const g = document.createElementNS(NS, 'g'); g.innerHTML = html; parent.appendChild(g);
+    return { g, q: sel => g.querySelector(sel) };
+  }
+
+  // ---------- Don Morsa: OG de la costa oeste que llega a fumar contigo ----------
+  const OG_SKIN = '#9a7a62', OG_JK = '#e8692c';
+  const ogFoot = '<rect x="-6.5" y="-4" width="13" height="5.4" rx="2.6" fill="#f5f5f7"/><rect x="-6.5" y=".1" width="13" height="1.5" rx=".7" fill="#1d1d1f"/>';
+  const ogEl = mkGuest(el.og, `
+    <ellipse class="sh" cx="0" cy="1" rx="18" ry="3.2" fill="#000" opacity=".25"/>
+    <polyline class="lgL" fill="none" stroke="#3b4f74" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline class="lgR" fill="none" stroke="#3b4f74" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <g class="ftL">${ogFoot}</g><g class="ftR">${ogFoot}</g>
+    <g class="up">
+      <path d="M-14 -75 Q0 -78.5 14 -75 Q21 -56 18 -35 Q0 -31 -18 -35 Q-21 -56 -14 -75 Z" fill="${OG_JK}"/>
+      <g fill="#fff4d6" opacity=".9"><circle cx="-9" cy="-64" r="2.2"/><circle cx="8" cy="-57" r="2.4"/><circle cx="-6" cy="-45" r="2"/><circle cx="11" cy="-42" r="1.8"/><circle cx="-13" cy="-53" r="1.5"/></g>
+      <g fill="#2f8f4e" opacity=".85"><path d="M-6 -60 q3 -3 6 0 q-3 2 -6 0Z"/><path d="M4 -47 q3 -3 6 0 q-3 2 -6 0Z"/></g>
+      <path d="M-5 -76 L0 -68 L5 -76" stroke="#c4501a" stroke-width="1.4" fill="none"/>
+      <path d="M0 -68 V-34" stroke="#c4501a" stroke-width=".9"/>
+      <rect x="-3.2" y="-81" width="6.4" height="7.5" fill="${OG_SKIN}"/>
+      <path d="M-7.5 -75.5 Q0 -59 7.5 -75.5" stroke="#ffd60a" stroke-width="1.8" fill="none"/>
+      <circle cx="0" cy="-62.5" r="2.9" fill="#ffd60a" stroke="#c9a400" stroke-width=".6"/>
+      <polyline class="arL" fill="none" stroke="${OG_JK}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline class="arR" fill="none" stroke="${OG_JK}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline class="stL" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity="0"/>
+      <polyline class="stR" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity="0"/>
+      <line class="jt" stroke="#f3efe6" stroke-width="2.2" stroke-linecap="round"/>
+      <circle class="emb" r="1.6" fill="#ff7a00"/>
+      <circle class="hdL" r="3.4" fill="${OG_SKIN}"/><circle class="hdR" r="3.4" fill="${OG_SKIN}"/>
+      <g class="ltr" opacity="0"><rect x="-2.2" y="-4.5" width="4.4" height="7.5" rx="1.1" fill="#ff3b30"/><path class="lfl" d="M0 -4.6 C-2.4 -7.5 -1 -10.5 0 -12.6 C1 -10.5 2.4 -7.5 0 -4.6 Z" fill="#ffb000"/></g>
+      <g class="head">
+        <ellipse cx="0" cy="1" rx="12.5" ry="11.5" fill="${OG_SKIN}"/>
+        <path d="M-2.6 8.5 Q-3.6 14 -2.2 18.5 Q-.9 14 -1 8.5 Z" fill="#fff8e6" stroke="#d8ccb0" stroke-width=".5"/>
+        <path d="M2.6 8.5 Q3.6 14 2.2 18.5 Q.9 14 1 8.5 Z" fill="#fff8e6" stroke="#d8ccb0" stroke-width=".5"/>
+        <circle cx="-4.4" cy="5.2" r="5.2" fill="#c7a68a"/><circle cx="4.4" cy="5.2" r="5.2" fill="#c7a68a"/>
+        <g fill="#6b4f3c"><circle cx="-6.5" cy="4.2" r=".6"/><circle cx="-4" cy="6.4" r=".6"/><circle cx="-7" cy="7" r=".6"/><circle cx="6.5" cy="4.2" r=".6"/><circle cx="4" cy="6.4" r=".6"/><circle cx="7" cy="7" r=".6"/></g>
+        <path d="M-9 5 L-14 4 M-9 6.8 L-14 7.6 M9 5 L14 4 M9 6.8 L14 7.6" stroke="#e8dcc8" stroke-width=".6"/>
+        <ellipse cx="0" cy="1.2" rx="2.8" ry="1.9" fill="#3a2a20"/>
+        <rect x="-9.6" y="-4.6" width="8.4" height="3.6" rx=".8" fill="#111"/><rect x="1.2" y="-4.6" width="8.4" height="3.6" rx=".8" fill="#111"/>
+        <path d="M-1.2 -3.4 H1.2" stroke="#111" stroke-width="1.2"/>
+        <path d="M-8.6 -3.6 h2.6 M2.2 -3.6 h2.6" stroke="#fff" stroke-width=".8" opacity=".55"/>
+        <path d="M-15 -6.8 Q0 -3.4 15 -6.8 L12.5 -9.6 Q0 -7.6 -12.5 -9.6 Z" fill="#256e3d"/>
+        <path d="M-10.5 -9 Q-10 -18.5 0 -18.8 Q10 -18.5 10.5 -9 Q0 -7.4 -10.5 -9 Z" fill="#2f8f4e"/>
+        <path d="M-10.4 -10.6 Q0 -9 10.4 -10.6" stroke="#ffd60a" stroke-width="1.1" fill="none"/>
       </g>
-      <text class="chant" x="0" y="-112" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="900" fill="#fff" stroke="#e03a3e" stroke-width="3" paint-order="stroke" opacity="0"></text>`;
-  }
-  const CHEERS = [
-    { home: { x: 58, y: 258 }, side: -1, phase: 0, skin: '#f1c7a5', hair: '#f2c14e' },
-    { home: { x: 348, y: 258 }, side: 1, phase: Math.PI * .5, skin: '#c98f6a', hair: '#3b2414' },
-  ].map(c => {
-    const g = document.createElementNS(NS, 'g');
-    g.innerHTML = cheerMarkup(c.skin, c.hair);
-    el.cheer.appendChild(g);
-    const q = sel => g.querySelector(sel);
-    return Object.assign(c, { g, fig: q('.fig'), sh: q('.sh'), aL: q('.armL'), aR: q('.armR'), lL: q('.legL'), lR: q('.legR'),
-      head: q('.head'), pony: q('.pony'), poms: g.querySelectorAll('.pom'), chant: q('.chant') });
-  });
-  const CHANTS = ['¡VAMOS SHARK!', '¡UNA MÁS!', '¡TÚ PUEDES!', '¡DALE QUE VA!'];
-  let confettiT = 0;
-  function drawCheer(SX, dt, ts) {
-    const cin = clamp(sp2.cheerIn.step(SX.cheer, dt), -.05, 1.05);
-    if (cin < .002 && !SX.cheer) { el.cheer.setAttribute('opacity', 0); return; }
-    el.cheer.setAttribute('opacity', 1);
-    const moving = Math.abs(sp2.cheerIn.v) > .08;
-    for (const [i, c] of CHEERS.entries()) {
-      const x = c.home.x + c.side * (1 - cin) * 150;
-      const ph = ts * 3.4 + c.phase;
-      const pattern = Math.floor(ts / 2.6 + i * .5) % 3;
-      let jump = 0, aL = 160, aR = -160, kL = 0, kR = 0, run = 0;
-      if (moving) {                                         // entra corriendo
-        run = Math.sin(ts * 15 + i);
-        kL = 28 * run; kR = -28 * run; aL = 25 - 30 * run; aR = -25 - 30 * run; jump = Math.abs(run) * 2.5;
-      } else if (pattern === 0) {                           // "V" saltando
-        jump = Math.abs(Math.sin(ph)) * 11;
-        aL = 150 + 12 * Math.sin(ph * 2); aR = -150 - 12 * Math.sin(ph * 2);
-        kL = 12 * Math.abs(Math.sin(ph)); kR = -kL;
-      } else if (pattern === 1) {                           // brazos alternados
-        jump = Math.abs(Math.sin(ph)) * 6;
-        const a = Math.sin(ph);
-        aL = 100 + 70 * a; aR = -100 + 70 * a;
-      } else {                                              // patada con manos arriba
-        const k = Math.max(0, Math.sin(ph * .5));
-        aL = 165; aR = -165; kR = -82 * k * k; jump = 1.5 * Math.sin(ph);
+    </g>
+    <text class="say" x="0" y="-122" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="900" fill="#fff" stroke="#256e3d" stroke-width="3" paint-order="stroke" opacity="0"></text>`);
+  const OG = {
+    home: { x: 66, y: 262 }, s: .95,
+    lgL: ogEl.q('.lgL'), lgR: ogEl.q('.lgR'), ftL: ogEl.q('.ftL'), ftR: ogEl.q('.ftR'), up: ogEl.q('.up'), sh: ogEl.q('.sh'),
+    arL: ogEl.q('.arL'), arR: ogEl.q('.arR'), stL: ogEl.q('.stL'), stR: ogEl.q('.stR'), hdL: ogEl.q('.hdL'), hdR: ogEl.q('.hdR'),
+    jt: ogEl.q('.jt'), emb: ogEl.q('.emb'), ltr: ogEl.q('.ltr'), lfl: ogEl.q('.lfl'), head: ogEl.q('.head'), say: ogEl.q('.say'),
+    hL: { x: -17, y: -48 }, hR: { x: 17, y: -50 }, toMouth: 0, smokeAcc: 0, puff: 0, lightV: 0,
+  };
+  const OG_LINES = ['RELAX, HOMIE 😎', 'WEST COAST 🌴', 'SUAVECITO…', 'PURA PAZ 💨', 'STAY CHILL ✌️'];
+  function drawOG(SX, dt, ts) {
+    const inn = clamp(sp2.ogIn.step(SX.og, dt), -.05, 1.05);
+    if (inn < .002 && !SX.og) { el.og.setAttribute('opacity', 0); return; }
+    el.og.setAttribute('opacity', 1);
+    const moving = Math.abs(sp2.ogIn.v) > .08;
+    const x = OG.home.x - (1 - inn) * 160, y = OG.home.y, s = OG.s;
+    const beat = musicBeats('gfunk', 92);
+    const nod = moving ? 0 : Math.pow(Math.abs(Math.sin(beat * Math.PI)), 1.6);   // cabeceo en cada tiempo
+    const bob = moving ? Math.abs(Math.sin(ts * 11)) * -1.6 : nod * 1.8;
+    const sway = moving ? 0 : Math.sin(beat * Math.PI / 2) * 1.6;
+    ogEl.g.setAttribute('transform', `translate(${f1(x)} ${f1(y)}) scale(${s})`);
+    OG.sh.setAttribute('rx', f1(18 - Math.abs(bob) * .4));
+    // piernas
+    let fL, fR;
+    if (moving) {
+      const ph = ts * 11;
+      fL = [-6 + 8 * Math.sin(ph), -2 - 3.5 * Math.max(0, Math.cos(ph))];
+      fR = [6 - 8 * Math.sin(ph), -2 - 3.5 * Math.max(0, -Math.cos(ph))];
+    } else { fL = [-8, -2]; fR = [8, -2]; }
+    for (const [hip, ft, ln, fe, bd] of [[-5.5, fL, OG.lgL, OG.ftL, 1], [5.5, fR, OG.lgR, OG.ftR, -1]]) {
+      const hy = -38 + bob, k = ik2(hip + sway * .4, hy, ft[0], ft[1], 19, 19, bd);
+      ln.setAttribute('points', pts([hip + sway * .4, hy], [k.ex, k.ey], [k.hx, k.hy]));
+      fe.setAttribute('transform', `translate(${f1(k.hx + (hip < 0 ? -1.5 : 1.5))} ${f1(k.hy)})`);
+    }
+    OG.up.setAttribute('transform', `translate(${f1(sway)} ${f1(bob)})`);
+    OG.head.setAttribute('transform', `translate(0 ${f1(-88 + nod * 1.2)}) rotate(${f1(moving ? 0 : -3 + 5 * nod)})`);
+    // brazo izquierdo: el porro; cada ~8 s se lo lleva a la boca
+    const cyc = (ts + 3) % 8, wantMouth = !moving && SX.og && cyc > 5.6 && cyc < 7.1;
+    OG.toMouth += ((wantMouth ? 1 : 0) - OG.toMouth) * (1 - Math.exp(-dt * 6));
+    if (OG.toMouth > .85 && !wantMouth) OG.puff = .9;            // al soltar, bota el humo
+    const tL = { x: lerp(-17 + Math.sin(ts * 1.3) * 1.5, -2.5, OG.toMouth), y: lerp(-47, -80.5, OG.toMouth) };
+    // brazo derecho: con el encendedor hacia el tiburón, o marcando el ritmo
+    OG.lightV += ((SX.ogLight ? 1 : 0) - OG.lightV) * (1 - Math.exp(-dt * 7));
+    const tR = moving ? { x: 16, y: -48 + 3 * Math.sin(ts * 11) }
+      : { x: lerp(19, 31, OG.lightV), y: lerp(-60 + 5 * nod, -84, OG.lightV) };
+    easeTo(OG.hL, moving ? { x: -16, y: -48 - 3 * Math.sin(ts * 11) } : tL, dt, 10);
+    easeTo(OG.hR, tR, dt, 10);
+    const aL = ik2(-12.5, -72, OG.hL.x, OG.hL.y, 14, 14, -1), aR = ik2(12.5, -72, OG.hR.x, OG.hR.y, 14, 14, 1);
+    OG.arL.setAttribute('points', pts([-12.5, -72], [aL.ex, aL.ey], [aL.hx, aL.hy]));
+    OG.arR.setAttribute('points', pts([12.5, -72], [aR.ex, aR.ey], [aR.hx, aR.hy]));
+    OG.stL.setAttribute('points', pts([-14.6, -72], [aL.ex - 2, aL.ey]));
+    OG.stR.setAttribute('points', pts([14.6, -72], [aR.ex + 2, aR.ey]));
+    OG.hdL.setAttribute('cx', f1(aL.hx)); OG.hdL.setAttribute('cy', f1(aL.hy));
+    OG.hdR.setAttribute('cx', f1(aR.hx)); OG.hdR.setAttribute('cy', f1(aR.hy));
+    // porro: apunta hacia afuera de la mano
+    let jx = aL.hx - aL.ex, jy = aL.hy - aL.ey; const jn = Math.hypot(jx, jy) || 1; jx /= jn; jy /= jn;
+    jx = lerp(jx, -1, OG.toMouth); jy = lerp(jy, .25, OG.toMouth); const jn2 = Math.hypot(jx, jy) || 1; jx /= jn2; jy /= jn2;
+    const je = { x: aL.hx + jx * 8, y: aL.hy + jy * 8 };
+    OG.jt.setAttribute('x1', f1(aL.hx)); OG.jt.setAttribute('y1', f1(aL.hy)); OG.jt.setAttribute('x2', f1(je.x)); OG.jt.setAttribute('y2', f1(je.y));
+    const glow = OG.toMouth > .6 ? 1 : .45;
+    OG.emb.setAttribute('cx', f1(je.x + jx)); OG.emb.setAttribute('cy', f1(je.y + jy));
+    OG.emb.setAttribute('fill', mix('#a83a00', '#ffb000', glow)); OG.emb.setAttribute('r', f1(1.3 + glow));
+    // encendedor
+    OG.ltr.setAttribute('opacity', OG.lightV > .05 ? Math.min(1, OG.lightV * 1.4).toFixed(2) : 0);
+    OG.ltr.setAttribute('transform', `translate(${f1(aR.hx)} ${f1(aR.hy - 3)})`);
+    OG.lfl.setAttribute('opacity', OG.lightV > .7 ? (.8 + .2 * Math.sin(ts * 40)).toFixed(2) : 0);
+    // humo (en coordenadas del escenario)
+    const W = (lx, ly) => ({ x: x + (lx + sway) * s, y: y + (ly + bob) * s });
+    if (!moving) {
+      const e = W(je.x + jx, je.y + jy);
+      OG.smokeAcc += dt * (1.6 + 3 * glow);
+      while (OG.smokeAcc > 1) { OG.smokeAcc--; emit(e.x, e.y, rnd(-5, 5), rnd(-26, -16), 2.2, 2, '#d5d9dc', -8, 2.4); }
+      if (OG.puff > 0) {
+        OG.puff -= dt; const m = W(1, -81 + nod * 1.2);
+        for (let i = 0; i < 2; i++) emit(m.x, m.y, rnd(15, 45), rnd(-35, -12), rnd(2, 3), rnd(2.5, 4), '#e1e4e6', -10, 2.8);
       }
-      c.g.setAttribute('transform', `translate(${f1(x)} ${f1(c.home.y)}) scale(.95)`);
-      c.fig.setAttribute('transform', `translate(0 ${f1(-jump)})`);
-      c.sh.setAttribute('rx', f1(15 - jump * .5)); c.sh.setAttribute('opacity', (.22 - jump * .008).toFixed(3));
-      c.aL.setAttribute('transform', `translate(-10 -66) rotate(${f1(aL)})`);
-      c.aR.setAttribute('transform', `translate(10 -66) rotate(${f1(aR)})`);
-      c.lL.setAttribute('transform', `translate(-4.5 -33) rotate(${f1(kL)})`);
-      c.lR.setAttribute('transform', `translate(4.5 -33) rotate(${f1(kR)})`);
-      c.head.setAttribute('transform', `translate(0 -84) rotate(${f1(5 * Math.sin(ph))})`);
-      c.pony.setAttribute('transform', `rotate(${f1(14 * Math.sin(ph * 2 + 1))} 6 -6)`);
-      const ps = (1 + .14 * Math.sin(ph * 4)).toFixed(3);
-      c.poms.forEach(pm => pm.setAttribute('transform', `translate(0 25) scale(${ps}) rotate(${f1(25 * Math.sin(ph * 3))})`));
-      // cánticos: aparecen y se van con suavidad
-      const cyc = (ts + i * 1.6) % 3.2, show = !moving && SX.cheer ? sstep(0, .25, cyc) * (1 - sstep(1.5, 1.85, cyc)) : 0;
-      if (cyc < .05) c.chant.textContent = CHANTS[Math.floor((ts + i * 1.6) / 3.2) % CHANTS.length];
-      c.chant.setAttribute('opacity', show.toFixed(2));
-      c.chant.setAttribute('transform', `translate(0 ${f1(-jump - 6 * show)})`);
     }
-    // confeti cada tanto
-    confettiT -= dt;
-    if (!moving && SX.cheer && confettiT <= 0) {
-      confettiT = 2.8;
-      const cols = ['#e03a3e', '#ffd60a', '#ffffff', '#2ec4b6', '#ff8fa3'];
-      for (const c of CHEERS) for (let k = 0; k < 16; k++)
-        emit(c.home.x + rnd(-14, 14), c.home.y - 110, rnd(-70, 70), rnd(-160, -60), rnd(1.2, 1.9), rnd(1.4, 2.4), cols[k % cols.length], 170);
-    }
+    // frases
+    const sc = (ts + 1.5) % 6.5, show = !moving && SX.og ? sstep(0, .3, sc) * (1 - sstep(2.4, 2.8, sc)) : 0;
+    if (sc < .05) OG.say.textContent = OG_LINES[Math.floor((ts + 1.5) / 6.5) % OG_LINES.length];
+    OG.say.setAttribute('opacity', show.toFixed(2));
+    OG.say.setAttribute('transform', `translate(${f1(sway)} ${f1(bob - 5 * show)})`);
   }
 
-
-  // ---------- Fiesta playera: luces, bola disco, música y bailarinas ----------
-  const BEAM_COLS = ['#ff2d3a', '#ff4fd8', '#2ec4b6', '#ffd60a', '#ff2d3a'];
-  const beams = BEAM_COLS.map((c, i) => {
-    const pth = document.createElementNS(NS, 'path');
-    pth.setAttribute('d', 'M0 0 L-34 330 L34 330 Z'); pth.setAttribute('fill', c); pth.setAttribute('opacity', '.16');
-    el.beams.appendChild(pth); return pth;
+  // ---------- Modo DJ: cabina, DJ y luces de rave ----------
+  const DJ_SKIN = '#e2ae84';
+  const eqBars = Array.from({ length: 9 }, (_, i) => `<rect class="eq" x="${-30 + i * 7}" y="-20" width="4.6" height="14" rx="1" fill="#39ff14"/>`).join('');
+  const djEl = mkGuest(el.dj, `
+    <ellipse cx="0" cy="1" rx="46" ry="3.8" fill="#000" opacity=".3"/>
+    <g class="up">
+      <path d="M-15.5 -78 Q0 -81.5 15.5 -78 L17 -38 L-17 -38 Z" fill="#141418"/>
+      <path d="M-7 -55 C-3 -57 1 -63 2.5 -70 C4.5 -63 6.5 -58 9 -55 Z" class="logo" fill="#39ff14"/>
+      <rect x="-3.2" y="-85" width="6.4" height="8" fill="${DJ_SKIN}"/>
+      <polyline class="arL" fill="none" stroke="${DJ_SKIN}" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline class="arR" fill="none" stroke="${DJ_SKIN}" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline class="slL" fill="none" stroke="#141418" stroke-width="8" stroke-linecap="round"/>
+      <polyline class="slR" fill="none" stroke="#141418" stroke-width="8" stroke-linecap="round"/>
+      <circle class="hdL" r="3.3" fill="${DJ_SKIN}"/><circle class="hdR" r="3.3" fill="${DJ_SKIN}"/>
+      <g class="head">
+        <circle r="10.8" fill="${DJ_SKIN}"/>
+        <path d="M-10.8 -3 Q-11.2 -15.5 0 -16 Q11.2 -15.5 10.8 -3 Z" fill="#1d1d1f"/>
+        <path d="M-12 -3.6 Q0 -7.4 12 -3.6 Q0 -1 -12 -3.6 Z" fill="#0d0d0f"/>
+        <path d="M-6.4 1.8 q2.1 -2.2 4.2 0 M2.2 1.8 q2.1 -2.2 4.2 0" stroke="#1d1d1f" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+        <path d="M-3.6 5.4 Q0 9 3.6 5.4" stroke="#7a3b2e" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M-12.4 1 Q-14 -19 0 -19.6 Q14 -19 12.4 1" stroke="#2c2c33" stroke-width="2.6" fill="none"/>
+        <rect class="cup" x="-15.4" y="-3.6" width="6" height="9.6" rx="2.8" fill="#1d1d1f" stroke="#00e5ff" stroke-width="1"/>
+        <rect class="cup" x="9.4" y="-3.6" width="6" height="9.6" rx="2.8" fill="#1d1d1f" stroke="#00e5ff" stroke-width="1"/>
+      </g>
+    </g>
+    <rect x="-44" y="-49" width="88" height="6.5" rx="2" fill="#26262e"/>
+    <ellipse cx="-23" cy="-49.5" rx="13.5" ry="2.9" fill="#0b0b0d"/><ellipse cx="23" cy="-49.5" rx="13.5" ry="2.9" fill="#0b0b0d"/>
+    <circle class="spL" r="1.2" fill="#fff"/><circle class="spR" r="1.2" fill="#fff"/>
+    <rect x="-6.5" y="-52.5" width="13" height="4.6" rx="1" fill="#3a3a44"/>
+    <circle cx="-3" cy="-50.2" r="1" fill="#ff2bd6"/><circle cx="0" cy="-50.2" r="1" fill="#00e5ff"/><circle cx="3" cy="-50.2" r="1" fill="#39ff14"/>
+    <rect x="-42" y="-43" width="84" height="43" rx="3" fill="#121215" stroke="#2a2a32" stroke-width="1"/>
+    <rect class="neon" x="-42" y="-43" width="84" height="2.8" fill="#39ff14"/>
+    <text x="0" y="-28.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="7.6" font-weight="900" letter-spacing="1.4" fill="#fff" opacity=".92">SHARK RAVE</text>
+    ${eqBars}`);
+  const DJ = {
+    home: { x: 340, y: 262 }, s: .95,
+    up: djEl.q('.up'), head: djEl.q('.head'), arL: djEl.q('.arL'), arR: djEl.q('.arR'), slL: djEl.q('.slL'), slR: djEl.q('.slR'),
+    hdL: djEl.q('.hdL'), hdR: djEl.q('.hdR'), spL: djEl.q('.spL'), spR: djEl.q('.spR'), neon: djEl.q('.neon'), logo: djEl.q('.logo'),
+    cups: djEl.g.querySelectorAll('.cup'), eq: [...djEl.g.querySelectorAll('.eq')],
+    hL: { x: -4, y: -52 }, hR: { x: 22, y: -52 },
+  };
+  const RAVE_COLS = ['#39ff14', '#00e5ff', '#ff2bd6', '#ffd60a', '#ff3b30'];
+  const lasers = Array.from({ length: 11 }, (_, i) => {
+    const glow = document.createElementNS(NS, 'line'), core = document.createElementNS(NS, 'line');
+    glow.setAttribute('stroke-width', '6'); glow.setAttribute('stroke-linecap', 'round');
+    core.setAttribute('stroke-width', '1.4'); core.setAttribute('stroke-linecap', 'round');
+    el.beams.appendChild(glow); el.beams.appendChild(core);
+    return { glow, core };
   });
-  const refl = Array.from({ length: 18 }, (_, i) => {
-    const c = document.createElementNS(NS, 'circle'); c.setAttribute('r', 1.6 + (i % 3) * .6);
-    c.setAttribute('fill', BEAM_COLS[i % BEAM_COLS.length]); el.refl.appendChild(c); return c;
+  const spots = Array.from({ length: 16 }, (_, i) => {
+    const c = document.createElementNS(NS, 'circle'); c.setAttribute('r', 1.8 + (i % 3) * .7); el.refl.appendChild(c); return c;
   });
-  const facets = [];
-  for (let r = -2; r <= 2; r++) for (let k = 0; k < 8; k++) {
-    const q = document.createElementNS(NS, 'rect'); q.setAttribute('width', 3.6); q.setAttribute('height', 3.6); q.setAttribute('fill', '#ffffff');
-    el.ballFacets.appendChild(q); facets.push({ q, r, k });
+  // posición musical de la rave: intro (0-3), groove (4-7), build (8-11), drop (12-19) y luego vuelve a groove→build→drop
+  const raveBarMap = b => b < 20 ? b : 4 + ((b - 20) % 16);
+  const raveSec = b => b < 4 ? 0 : b < 8 ? 1 : b < 12 ? 2 : 3;
+  let strobeV = 0, lastDropBeat = -1;
+  function drawRave(SX, dt, ts) {
+    const rv = clamp(sp2.rave.step(SX.rave, dt), 0, 1);
+    const din = clamp(sp2.djIn.step(SX.rave, dt), -.05, 1.05);
+    if (rv < .002 && din < .002 && !SX.rave) { el.partyBack.setAttribute('opacity', 0); el.dj.setAttribute('opacity', 0); return; }
+    const beach = S.mode === 'rest';
+    const beats = musicBeats('rave', 126), bi = Math.floor(beats), fr = beats - bi;
+    const bar = raveBarMap(Math.floor(beats / 4)), sec = raveSec(bar), p16 = Math.floor((beats % 4) * 4);
+    const bp = sec === 2 ? clamp(((bar - 8) * 16 + p16) / 64, 0, 1) : 0;          // avance del build
+    const blackout = sec === 2 && bar === 11 && p16 >= 12;
+    const pulse = Math.exp(-fr * 6);                                            // golpe del bombo
+    const drop = sec === 3;
+    // fondo y estrobo
+    el.partyBack.setAttribute('opacity', rv.toFixed(3));
+    const dim = beach ? (drop ? .38 : .3) : (blackout ? .8 : drop ? .66 : sec === 2 ? .56 + .14 * bp : .55);
+    el.partyDim.setAttribute('opacity', dim.toFixed(2));
+    el.partyDim.setAttribute('fill', drop ? (bar % 2 ? '#03101f' : '#12051f') : '#0a0614');
+    if (drop && bi !== lastDropBeat) { lastDropBeat = bi; strobeV = bar === 12 && p16 < 2 ? .34 : .13; }
+    strobeV *= Math.exp(-dt * 16);
+    el.strobe.setAttribute('opacity', (strobeV * rv).toFixed(3));
+    // láseres: un abanico desde la cabina + tres desde arriba en el drop
+    const bx = DJ.home.x + (1 - din) * 170, by = DJ.home.y - 52 * DJ.s;
+    const nOn = blackout ? 0 : [3, 6, 8, 11][sec];
+    const spd = [.6, 1.1, 1 + 3 * bp, 2.4][sec], swing = [8, 15, 10 + 10 * bp, 28][sec];
+    const shift = drop ? bar : sec;
+    lasers.forEach((L, i) => {
+      const top = i >= 8;
+      const ox = top ? [12, 388, 200][i - 8] : bx, oy = top ? -8 : by;
+      let ang;
+      if (!top) {
+        const spread = sec === 2 ? 70 * (1 - bp) + 6 : 70;
+        ang = -122 + (i - 3.5) * spread / 7 + Math.sin(ts * spd + i * .9) * swing;
+      } else ang = [52, 128, 90][i - 8] + Math.sin(ts * spd * 1.3 + i * 2) * 26;
+      const r = ang * Math.PI / 180, x2 = ox + Math.cos(r) * 620, y2 = oy + Math.sin(r) * 620;
+      const col = RAVE_COLS[(i + shift) % RAVE_COLS.length], on = i < nOn ? 1 : 0;
+      const flick = drop ? .75 + .25 * pulse : .85;
+      for (const [ln, op] of [[L.glow, .2], [L.core, .9]]) {
+        ln.setAttribute('x1', f1(ox)); ln.setAttribute('y1', f1(oy)); ln.setAttribute('x2', f1(x2)); ln.setAttribute('y2', f1(y2));
+        ln.setAttribute('stroke', col); ln.setAttribute('opacity', (op * on * flick).toFixed(2));
+      }
+    });
+    // manchas de luz en las paredes
+    spots.forEach((c, i) => {
+      const a = i * 2.39 + ts * (drop ? 1.3 : .5), rr = 70 + (i * 37) % 120;
+      c.setAttribute('cx', f1(200 + Math.cos(a) * rr * 1.4)); c.setAttribute('cy', f1(110 + Math.sin(a) * rr * .6));
+      c.setAttribute('fill', RAVE_COLS[(i + shift) % RAVE_COLS.length]);
+      c.setAttribute('opacity', blackout ? 0 : ((sec >= 1 ? .5 : .25) + .4 * Math.sin(ts * 3 + i) * (drop ? pulse : .5)).toFixed(2));
+    });
+    // DJ y cabina
+    el.dj.setAttribute('opacity', din > .002 ? 1 : 0);
+    djEl.g.setAttribute('transform', `translate(${f1(bx)} ${f1(DJ.home.y)}) scale(${DJ.s})`);
+    const moving = Math.abs(sp2.djIn.v) > .08;
+    const bob = moving ? 0 : pulse * (drop ? 2.2 : 1.2);
+    DJ.up.setAttribute('transform', `translate(0 ${f1(bob)})`);
+    DJ.head.setAttribute('transform', `translate(0 ${f1(-92 + pulse * (drop ? 2.4 : 1.4))}) rotate(${f1(drop ? 6 * Math.sin(beats * Math.PI) : 0)})`);
+    let tL, tR;
+    const scratch = Math.sin(ts * 10) * 3.5;
+    if (moving || sec === 0) { tL = { x: -4, y: -52 + Math.sin(ts * 2) }; tR = { x: 22 + scratch, y: -51.5 }; }
+    else if (sec === 1) { tL = { x: -4 + Math.sin(ts * 1.5) * 2, y: -52 }; tR = { x: 21, y: -98 + 8 * pulse }; }
+    else if (sec === 2) { tL = { x: lerp(-4, -15, bp), y: lerp(-52, -108, sstep(0, .6, bp)) }; tR = { x: 6 + Math.sin(ts * 4) * 1.5, y: -52 }; }
+    else { const alt = bi % 2; tL = { x: -18, y: -100 + (alt ? 8 * pulse : 0) }; tR = { x: 18, y: -100 + (alt ? 0 : 8 * pulse) }; }
+    easeTo(DJ.hL, tL, dt, 12); easeTo(DJ.hR, tR, dt, 12);
+    const aL = ik2(-13, -75, DJ.hL.x, DJ.hL.y, 14, 15, 1), aR = ik2(13, -75, DJ.hR.x, DJ.hR.y, 14, 15, -1);
+    DJ.arL.setAttribute('points', pts([-13, -75], [aL.ex, aL.ey], [aL.hx, aL.hy]));
+    DJ.arR.setAttribute('points', pts([13, -75], [aR.ex, aR.ey], [aR.hx, aR.hy]));
+    DJ.slL.setAttribute('points', pts([-13, -75], [lerp(-13, aL.ex, .45), lerp(-75, aL.ey, .45)]));
+    DJ.slR.setAttribute('points', pts([13, -75], [lerp(13, aR.ex, .45), lerp(-75, aR.ey, .45)]));
+    DJ.hdL.setAttribute('cx', f1(aL.hx)); DJ.hdL.setAttribute('cy', f1(aL.hy));
+    DJ.hdR.setAttribute('cx', f1(aR.hx)); DJ.hdR.setAttribute('cy', f1(aR.hy));
+    const th = ts * 3.5;
+    DJ.spL.setAttribute('cx', f1(-23 + Math.cos(th) * 10)); DJ.spL.setAttribute('cy', f1(-49.5 + Math.sin(th) * 2.2));
+    DJ.spR.setAttribute('cx', f1(23 + Math.cos(th + 2) * 10)); DJ.spR.setAttribute('cy', f1(-49.5 + Math.sin(th + 2) * 2.2));
+    const nc = RAVE_COLS[(shift + 1) % RAVE_COLS.length];
+    DJ.neon.setAttribute('fill', nc); DJ.logo.setAttribute('fill', nc);
+    DJ.cups.forEach(c => c.setAttribute('stroke', RAVE_COLS[(shift + 2) % RAVE_COLS.length]));
+    const amp = blackout ? .1 : [.45, .75, .6 + .4 * bp, 1][sec];
+    DJ.eq.forEach((r, i) => {
+      const v = clamp((pulse * (1 - i / 11) + .38 * (.5 + .5 * Math.sin(ts * (7 + i * 1.3) + i * 2))) * amp, .08, 1);
+      r.setAttribute('height', f1(14 * v)); r.setAttribute('y', f1(-6 - 14 * v));
+      r.setAttribute('fill', drop ? RAVE_COLS[(i + bar) % RAVE_COLS.length] : '#39ff14');
+    });
   }
-  function dancerMarkup(skin, hair, suit, pareo) {
-    const arm = side => `<g class="arm${side}" transform="translate(${side === 'L' ? -9.5 : 9.5} -65)"><rect x="-2.5" y="-1" width="5" height="24" rx="2.5" fill="${skin}"/><circle cy="24.5" r="3" fill="${skin}"/></g>`;
-    const leg = side => `<g class="leg${side}" transform="translate(${side === 'L' ? -4.5 : 4.5} -34)"><rect x="-3.3" y="0" width="6.6" height="31" rx="3.3" fill="${skin}"/><rect x="-4.8" y="29.5" width="9.6" height="3" rx="1.5" fill="${suit}"/></g>`;
-    const lei = [0, 1, 2, 3, 4, 5, 6].map(i => { const a = Math.PI * (.12 + i * .127); return `<circle cx="${(Math.cos(a) * 9).toFixed(1)}" cy="${(-69 + Math.sin(a) * 5).toFixed(1)}" r="2.2" fill="${['#ff4f8b', '#ffd60a', '#ff8a3d', '#ffffff'][i % 4]}"/>`; }).join('');
-    return `<ellipse class="sh" cx="0" cy="1" rx="15" ry="3" fill="#000" opacity=".22"/>
-      <g class="fig">
-        ${leg('L')}${leg('R')}
-        <rect x="-9.5" y="-69" width="19" height="31" rx="5" fill="${skin}"/>
-        <path d="M-9.6 -42 L9.6 -42 L8 -33.5 L-8 -33.5 Z" fill="${suit}"/>
-        <path d="M-10.5 -41 C-6 -38 -2 -37 2 -36 L-3 -18 C-8 -20 -12 -24 -13 -30 Z" fill="${pareo}" opacity=".92"/>
-        <path d="M-10.5 -41 L-3 -18" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
-        <rect x="-10" y="-64" width="20" height="7.5" rx="3.2" fill="${suit}"/>
-        <circle cx="0" cy="-60.3" r="1.6" fill="#fff" opacity=".85"/>
-        <rect x="-2.6" y="-75" width="5.2" height="8" fill="${skin}"/>
-        ${lei}
-        ${arm('L')}${arm('R')}
-        <g class="head" transform="translate(0 -84)">
-          <path d="M-10.5 -2 C-13 8 -12 15 -8 18 C-9 10 -8 4 -6 0 Z M10.5 -2 C13 8 12 15 8 18 C9 10 8 4 6 0 Z" fill="${hair}"/>
-          <circle r="10.2" fill="${skin}"/>
-          <path d="M-10.8 0 C-11.5 -13 11.5 -13 10.8 0 C7.5 -6.5 -7.5 -6.5 -10.8 0 Z" fill="${hair}"/>
-          <g transform="translate(-8 -6)"><circle r="2.4" fill="#ff4f8b"/><circle cx="2.6" cy="-1" r="2.1" fill="#ff4f8b"/><circle cx="1" cy="2.3" r="2.1" fill="#ff4f8b"/><circle cx=".9" cy=".3" r="1.2" fill="#ffd60a"/></g>
-          <rect x="-8" y="-1.5" width="6.6" height="4" rx="1.6" fill="#1d1d1f"/><rect x="1.4" y="-1.5" width="6.6" height="4" rx="1.6" fill="#1d1d1f"/>
-          <path d="M-1.4 -.2 H1.4" stroke="#1d1d1f" stroke-width="1.2"/>
-          <path d="M-3.2 5.2 Q0 8.2 3.2 5.2" stroke="#b5384a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-        </g>
-      </g>`;
-  }
-  const DANCERS = [
-    { home: { x: 60, y: 258 }, side: -1, phase: 0, skin: '#e9b48f', hair: '#2b1a10', suit: '#e3262f', pareo: '#ff8a3d' },
-    { home: { x: 346, y: 258 }, side: 1, phase: Math.PI, skin: '#f3cfb0', hair: '#e8b04a', suit: '#e3262f', pareo: '#2ec4b6' },
-  ].map(c => {
-    const g = document.createElementNS(NS, 'g');
-    g.innerHTML = dancerMarkup(c.skin, c.hair, c.suit, c.pareo);
-    el.dancers.appendChild(g);
-    const q = sel => g.querySelector(sel);
-    return Object.assign(c, { g, fig: q('.fig'), sh: q('.sh'), aL: q('.armL'), aR: q('.armR'), lL: q('.legL'), lR: q('.legR'), head: q('.head') });
-  });
 
-  // música: un loop de 120 BPM sintetizado (bombo, hi-hat, palmas y bajo)
+  // ---------- Música sintetizada (beat West Coast y tech house) ----------
   let music = null;
-  const BPM = 120, M_STEP = 60 / BPM / 2;
-  const ROOTS = [110, 87.31, 130.81, 98];   // La, Fa, Do, Sol
   function mNoise(t, dur, type, freq, peak) {
     const src = actx.createBufferSource(); src.buffer = nbuf(); src.loop = true;
     const f = actx.createBiquadFilter(); f.type = type; f.frequency.value = freq;
     const g = actx.createGain(); g.gain.setValueAtTime(peak, t); g.gain.exponentialRampToValueAtTime(.0004, t + dur);
     src.connect(f).connect(g).connect(music.out); src.start(t, Math.random()); src.stop(t + dur + .03);
   }
-  function mTone(t, dur, type, f0, f1, peak, lp) {
+  function mTone(t, dur, type, f0, f1_, peak, lp) {
     const o = actx.createOscillator(), g = actx.createGain(); o.type = type;
-    o.frequency.setValueAtTime(f0, t); if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur * .6);
+    o.frequency.setValueAtTime(f0, t); if (f1_ !== f0) o.frequency.exponentialRampToValueAtTime(f1_, t + dur * .6);
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + .005); g.gain.exponentialRampToValueAtTime(.0004, t + dur);
     if (lp) { const f = actx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = lp; o.connect(f).connect(g); } else o.connect(g);
     g.connect(music.out); o.start(t); o.stop(t + dur + .03);
   }
-  function mStep(i, t) {
-    const bar = Math.floor(i / 8) % 4, root = ROOTS[bar];
-    if (i % 2 === 0) mTone(t, .28, 'sine', 150, 46, .9);                    // bombo en cada tiempo
-    if (i % 2 === 1) mNoise(t, .05, 'highpass', 8000, .22);                 // hi-hat a contratiempo
-    if (i % 8 === 2 || i % 8 === 6) mNoise(t, .16, 'bandpass', 1700, .32);   // palmas
-    if (i % 2 === 1) mTone(t, .2, 'sawtooth', root, root, .2, 520);         // bajo
-    if (i % 8 === 3 || i % 8 === 7) [1, 1.19, 1.5].forEach(k => mTone(t, .18, 'triangle', root * 4 * k, root * 4 * k, .035));
+  function mRiser(t, dur) {
+    const src = actx.createBufferSource(); src.buffer = nbuf(); src.loop = true;
+    const f = actx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 2.5;
+    f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(5200, t + dur);
+    const g = actx.createGain(); g.gain.setValueAtTime(.001, t); g.gain.linearRampToValueAtTime(.15, t + dur * .97); g.gain.linearRampToValueAtTime(0, t + dur);
+    src.connect(f).connect(g).connect(music.out); src.start(t); src.stop(t + dur + .05);
   }
-  function startMusic() {
+  function mLead(t, dur, f, fp) {     // sintetizador agudo con glissando y vibrato
+    const o = actx.createOscillator(), g = actx.createGain(), lfo = actx.createOscillator(), lg = actx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(fp, t); o.frequency.exponentialRampToValueAtTime(f, t + .08);
+    lfo.frequency.value = 5.6; lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * .013, t + dur * .5);
+    lfo.connect(lg).connect(o.frequency);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.045, t + .05); g.gain.setValueAtTime(.045, t + dur * .8); g.gain.linearRampToValueAtTime(0, t + dur);
+    o.connect(g).connect(music.out); o.start(t); lfo.start(t); o.stop(t + dur + .05); lfo.stop(t + dur + .05);
+  }
+  // tech house a 126 BPM: bombo 4x4, hats a contratiempo, bajo rodante, build con redoble y drop con stabs
+  function raveStep(i, t) {
+    const bar = raveBarMap(Math.floor(i / 16)), p = i % 16, sec = raveSec(bar), bb = bar - 8;
+    const lastBuild = sec === 2 && bb === 3;
+    if (p % 4 === 0 && !(lastBuild && p >= 8)) { mTone(t, .32, 'sine', 160, 44, 1); mNoise(t, .012, 'highpass', 3000, .22); }
+    if (p % 2 === 1) mNoise(t, .03, 'highpass', 9000, p % 4 === 3 ? .07 : .045);
+    if (sec !== 0 && sec !== 2 && p % 4 === 2) mNoise(t, .14, 'highpass', 6500, .12);
+    if ((sec === 1 || sec === 3) && (p === 4 || p === 12)) { mNoise(t, .15, 'bandpass', 1500, .28); mNoise(t + .012, .12, 'bandpass', 1250, .2); }
+    if (sec !== 2 && (p === 7 || p === 10 || p === 15)) mTone(t, .04, 'triangle', 1250, 1250, .055);
+    if (sec >= 1 && p % 4 !== 0 && !lastBuild) {
+      const n = p >= 14 ? (bar % 2 ? 49 : 65.41) : 55;
+      const cut = sec === 2 ? 320 + 1700 * ((bb * 16 + p) / 64) : 380 + 520 * (.5 + .5 * Math.sin(i / 64 * TAU));
+      mTone(t, .11, 'sawtooth', n, n, .18, cut); mTone(t, .11, 'sine', n, n, .2);
+    }
+    if (sec === 2) {
+      const every = bb < 2 ? 4 : bb === 2 ? 2 : 1;
+      if (p % every === 0) mNoise(t, .09, 'bandpass', 2200, .07 + .2 * ((bb * 16 + p) / 64));
+      if (bb === 0 && p === 0) mRiser(t, 60 / 126 * 16);
+    }
+    if (sec === 3) {
+      if (bar === 12 && p === 0) mNoise(t, 1.4, 'highpass', 5000, .2);
+      if (p === 3 || p === 10) [220, 261.63, 329.63, 392].forEach(f => mTone(t, .13, 'sawtooth', f, f, .032, 1900));
+    }
+  }
+  // beat West Coast a 92 BPM con swing: bombo y caja relajados, bajo con slide, acordes suaves y un sinte agudo
+  const GF_CH = [[98, 116.54, 146.83, 174.61], [130.81, 155.56, 196, 233.08], [98, 116.54, 146.83, 174.61], [146.83, 185, 220, 261.63]];
+  const GF_BASS = [49, 65.41, 49, 73.42];
+  const GF_LEAD = [[[0, 1174.66, 6], [6, 1046.5, 2], [8, 932.33, 8]], [[0, 783.99, 4], [4, 932.33, 4], [8, 1046.5, 8]],
+                   [[0, 1174.66, 4], [4, 1396.91, 4], [8, 1174.66, 8]], [[0, 1046.5, 6], [6, 932.33, 2], [8, 880, 8]]];
+  let gfPrev = 1046.5;
+  function gfunkStep(i, t) {
+    const bar = Math.floor(i / 16), b4 = bar % 4, p = i % 16, sd = 60 / 92 / 4;
+    if (p === 0 || p === 7 || p === 10) mTone(t, .38, 'sine', 120, 42, .95);
+    if (p === 4 || p === 12) { mNoise(t, .2, 'bandpass', 1800, .32); mTone(t, .12, 'triangle', 200, 160, .16); }
+    if (p % 2 === 0) mNoise(t, .035, 'highpass', 8500, p % 4 === 2 ? .07 : .045);
+    if (p === 15) mNoise(t, .03, 'highpass', 8500, .03);
+    const root = GF_BASS[b4], bn = { 0: [root, 5], 6: [root, 2], 8: [root * 1.5, 2], 11: [root * 2, 1], 12: [root * 1.335, 3] }[p];
+    if (bn) { const d = bn[1] * sd * 1.5; mTone(t, d, 'triangle', bn[0], bn[0], .3, 420); mTone(t, d, 'sine', bn[0], bn[0], .22); }
+    if (p === 0) GF_CH[b4].forEach(f => mTone(t, 1.6, 'triangle', f * 2, f * 2, .026, 2200));
+    if (p === 8) GF_CH[b4].forEach(f => mTone(t, .5, 'triangle', f * 2, f * 2, .018, 2200));
+    if (bar % 8 >= 2) { const n = GF_LEAD[b4].find(q => q[0] === p); if (n) { mLead(t, n[2] * sd * 1.05, n[1], gfPrev); gfPrev = n[1]; } }
+  }
+  const STYLES = { rave: { bpm: 126, swing: 0, vol: .3, step: raveStep }, gfunk: { bpm: 92, swing: .6, vol: .34, step: gfunkStep } };
+  function startMusic(style) {
     if (music || settings.mute || !settings.sound) return;
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
       if (actx.state === 'suspended') actx.resume();
-      const out = actx.createGain(); out.gain.setValueAtTime(0, actx.currentTime); out.gain.linearRampToValueAtTime(.32, actx.currentTime + 1.2);
+      const cfg = STYLES[style], out = actx.createGain();
+      out.gain.setValueAtTime(0, actx.currentTime); out.gain.linearRampToValueAtTime(cfg.vol, actx.currentTime + 1);
       out.connect(actx.destination);
-      music = { out, next: actx.currentTime + .12, step: 0 };
+      const t0 = actx.currentTime + .12;
+      music = { style, cfg, out, t0, next: t0, step: 0 };
+      if (style === 'gfunk') gfPrev = 1046.5;
       music.timer = setInterval(() => {
         if (!music) return;
-        while (music.next < actx.currentTime + .3) { mStep(music.step, music.next); music.next += M_STEP; music.step++; }
+        const m = music, d = 60 / m.cfg.bpm / 4;
+        while (m.next < actx.currentTime + .3) {
+          m.cfg.step(m.step, m.next);
+          m.next += m.cfg.swing ? d * 2 * (m.step % 2 ? 1 - m.cfg.swing : m.cfg.swing) : d;
+          m.step++;
+        }
       }, 60);
     } catch (e) { music = null; }
   }
@@ -2933,71 +3132,16 @@
     const m = music; music = null; clearInterval(m.timer);
     try { const t = actx.currentTime; m.out.gain.cancelScheduledValues(t); m.out.gain.setValueAtTime(m.out.gain.value, t); m.out.gain.linearRampToValueAtTime(0, t + .9); setTimeout(() => m.out.disconnect(), 1200); } catch (e) {}
   }
-
-  function drawParty(SX, dt, ts) {
-    const pv = clamp(sp2.party.step(SX.party, dt), 0, 1);
-    const din = clamp(sp2.danceIn.step(SX.party, dt), -.05, 1.05);
-    if (SX.party && pv > .3 && !settings.mute && settings.sound) startMusic();
-    if ((!SX.party || settings.mute || !settings.sound) && music) stopMusic();
-    if (pv < .002 && din < .002 && !SX.party) { el.partyBack.setAttribute('opacity', 0); el.dancers.setAttribute('opacity', 0); return; }
-    const beach = S.mode === 'rest';
-    el.partyBack.setAttribute('opacity', pv.toFixed(3));
-    el.partyDim.setAttribute('opacity', (beach ? .28 : .55).toFixed(2));
-    el.partyDim.setAttribute('fill', beach ? '#3a0a2e' : '#1b0716');
-    // bola disco que baja y gira
-    const by = -40 + 98 * clamp(sp2.ball.step(SX.party ? 1 : 0, dt), 0, 1.1);
-    el.discoBall.setAttribute('transform', `translate(200 ${f1(by)})`);
-    for (const f of facets) {
-      const a = (f.k / 8) * TAU + ts * 1.6, x = Math.sin(a) * 15 * Math.cos(f.r * .32), vis = Math.cos(a);
-      f.q.setAttribute('x', f1(x - 1.8)); f.q.setAttribute('y', f1(f.r * 5.6 - 1.8));
-      f.q.setAttribute('opacity', vis > 0 ? (.25 + .75 * vis * (.5 + .5 * Math.sin(ts * 9 + f.k))).toFixed(2) : 0);
-    }
-    // haces de luz que barren la sala
-    beams.forEach((b, i) => {
-      const ang = Math.sin(ts * (.7 + i * .13) + i * 1.7) * 38 + (i - 2) * 14;
-      b.setAttribute('transform', `translate(200 ${f1(by)}) rotate(${f1(ang)})`);
-      b.setAttribute('opacity', (.1 + .08 * (.5 + .5 * Math.sin(ts * 4 + i * 2))).toFixed(3));
-    });
-    // reflejos que giran por las paredes
-    refl.forEach((c, i) => {
-      const a = i * 2.39 + ts * .55, r = 70 + (i * 37) % 120;
-      c.setAttribute('cx', f1(200 + Math.cos(a) * r * 1.4)); c.setAttribute('cy', f1(by + 40 + Math.sin(a) * r * .6));
-      c.setAttribute('opacity', (.55 + .45 * Math.sin(ts * 3 + i)).toFixed(2));
-    });
-    // bailarinas
-    el.dancers.setAttribute('opacity', din > .002 ? 1 : 0);
-    const moving = Math.abs(sp2.danceIn.v) > .08;
-    const beat = ts * (BPM / 60) * Math.PI;      // medio ciclo por tiempo
-    for (const [i, c] of DANCERS.entries()) {
-      const x = c.home.x + c.side * (1 - din) * 150;
-      const ph = beat + c.phase;
-      const pattern = Math.floor(ts / 4 + i * .5) % 3;
-      let bob = 0, sway = 0, aL = 20, aR = -20, kL = 0, kR = 0, tilt = 0;
-      if (moving) {
-        const run = Math.sin(ts * 15 + i); kL = 26 * run; kR = -26 * run; aL = 25 - 30 * run; aR = -25 - 30 * run; bob = Math.abs(run) * 2;
-      } else if (pattern === 0) {                         // brazos arriba, de lado a lado
-        sway = Math.sin(ph) * 4; bob = Math.abs(Math.sin(ph)) * 4; tilt = Math.sin(ph) * 6;
-        aL = 160 + 14 * Math.sin(ph); aR = -160 + 14 * Math.sin(ph);
-        kL = 8 * Math.max(0, Math.sin(ph)); kR = -8 * Math.max(0, -Math.sin(ph));
-      } else if (pattern === 1) {                         // paso disco: señalar arriba y abajo
-        const up = Math.sin(ph) > 0;
-        bob = Math.abs(Math.sin(ph)) * 3; sway = Math.sin(ph) * 2;
-        aL = up ? 145 : 40; aR = up ? -40 : -145;
-        kL = up ? 10 : 0; kR = up ? 0 : -10;
-      } else {                                            // aplausos sobre la cabeza
-        bob = Math.abs(Math.sin(ph)) * 5;
-        const c2 = .5 + .5 * Math.sin(ph * 2);
-        aL = 168 + 10 * c2; aR = -168 - 10 * c2;
-      }
-      c.g.setAttribute('transform', `translate(${f1(x + sway)} ${f1(c.home.y)}) scale(.95)`);
-      c.fig.setAttribute('transform', `translate(0 ${f1(-bob)}) rotate(${f1(tilt * .4)} 0 -34)`);
-      c.sh.setAttribute('rx', f1(15 - bob * .4));
-      c.aL.setAttribute('transform', `translate(-9.5 -65) rotate(${f1(aL)})`);
-      c.aR.setAttribute('transform', `translate(9.5 -65) rotate(${f1(aR)})`);
-      c.lL.setAttribute('transform', `translate(-4.5 -34) rotate(${f1(kL)})`);
-      c.lR.setAttribute('transform', `translate(4.5 -34) rotate(${f1(kR)})`);
-      c.head.setAttribute('transform', `translate(0 -84) rotate(${f1(tilt)})`);
-    }
+  function updateMusic(SX) {
+    const want = SX.rave ? 'rave' : SX.og ? 'gfunk' : null;
+    const ok = want && !settings.mute && settings.sound;
+    if (music && (!ok || music.style !== want)) stopMusic();
+    if (ok && !music) startMusic(want);
+  }
+  // tiempos musicales para sincronizar los bailes (si no suena, se usa el reloj del especial)
+  function musicBeats(style, bpm) {
+    if (music && music.style === style && actx) return Math.max(0, (actx.currentTime - music.t0) * bpm / 60);
+    return SPc ? SPc.T * bpm / 60 : 0;
   }
 
   // dibuja objetos, humo, aura, etc. después del tiburón
@@ -3071,8 +3215,9 @@
     if (SX.sparkle) for (let i = 0; i < 26; i++) { const a = rnd(0, TAU), r = rnd(10, 46); emit(out.H.x - 30 + Math.cos(a) * r, out.H.y - 4 + Math.sin(a) * r * .6, Math.cos(a) * 30, -rnd(20, 70), rnd(.6, 1.1), rnd(1.2, 2.4), i % 3 ? '#ffd60a' : '#ffffff', 40); }
     // se desinfla: soplidos de aire
     if (SX.deflate) { steamAcc += dt * 14; while (steamAcc > 1) { steamAcc--; const a = rnd(0, TAU); emit(out.H.x - 30 + Math.cos(a) * 34, out.H.y - 4 + Math.sin(a) * 22, Math.cos(a) * 60, Math.sin(a) * 40 - 20, .6, rnd(1.6, 3), '#e8f6ff', -10, 1.8); } }
-    drawCheer(SX, dt, ts);
-    drawParty(SX, dt, ts);
+    updateMusic(SX);
+    drawOG(SX, dt, ts);
+    drawRave(SX, dt, ts);
     // lata que sale volando
     if (canFlight) {
       const c = canFlight; c.t += dt; c.vy += 700 * dt; c.x += c.vx * dt; c.y += c.vy * dt; c.r += 720 * dt;
@@ -3175,6 +3320,7 @@
       for (const key of Object.keys(shop)) delete shop[key];
       Object.assign(shop, { coins: START_COINS, inv: { ...INV0 }, protein: 0, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, d);
       shop.inv = Object.assign({ ...INV0 }, d.inv);
+      if (migrateInv()) setTimeout(saveShop, 0);
       if (!BOARDS[shop.board]) shop.board = 'clasica';
       if (!SHORTS[shop.shorts]) shop.shorts = 'clasico';
     }
