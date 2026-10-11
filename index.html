@@ -152,21 +152,23 @@
   /* Flip clock */
   .flipclock { display: flex; justify-content: center; gap: 2.8cqw; perspective: 70cqw; }
   .flipclock .grp { display: flex; gap: .7cqw; }
+  .flipclock.h3 .card { width: 10.4cqw; height: 15.6cqw; font-size: 13.8cqw; }
   .card {
-    position: relative; width: 11.4cqw; height: 17cqw; border-radius: 1.8cqw;
-    font-size: 15cqw; font-weight: 700; letter-spacing: -.04em; color: #d2d2d4;
+    position: relative; width: 12.2cqw; height: 18cqw; border-radius: 1.9cqw;
+    font-size: 16.4cqw; font-weight: 800; letter-spacing: -.04em; color: #ffffff;
+    text-shadow: 0 0 1.6cqw rgba(255,255,255,.22), 0 .3cqw .6cqw rgba(0,0,0,.6);
     font-variant-numeric: tabular-nums;
     box-shadow: 0 1.6cqw 4cqw -1cqw rgba(0,0,0,.65), inset 0 0 0 .15cqw rgba(255,255,255,.04);
     transition: transform .5s var(--spring);
   }
-  .card .half { position: absolute; left: 0; right: 0; height: 50%; overflow: hidden; background: linear-gradient(180deg, #1d1d20, #161618); }
-  .card .half.top { top: 0; border-radius: 1.8cqw 1.8cqw 0 0; }
-  .card .half.bottom { bottom: 0; border-radius: 0 0 1.8cqw 1.8cqw; background: linear-gradient(180deg, #131315, #1a1a1c); }
+  .card .half { position: absolute; left: 0; right: 0; height: 50%; overflow: hidden; background: linear-gradient(180deg, #26262b, #1b1b1f); box-shadow: inset 0 .2cqw 0 rgba(255,255,255,.07); }
+  .card .half.top { top: 0; border-radius: 1.9cqw 1.9cqw 0 0; }
+  .card .half.bottom { bottom: 0; border-radius: 0 0 1.9cqw 1.9cqw; background: linear-gradient(180deg, #17171a, #202024); box-shadow: none; }
   .card .half span { position: absolute; left: 0; right: 0; height: 200%; display: flex; align-items: center; justify-content: center; line-height: 1; }
   .card .half.top span { top: 0; }
   .card .half.bottom span { bottom: 0; }
   .card::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: .35cqw; margin-top: -.17cqw; background: rgba(0,0,0,.9); z-index: 5; }
-  .card .lab { position: absolute; left: 1.2cqw; bottom: 1cqw; font-size: 1.8cqw; font-weight: 700; letter-spacing: .12em; color: #8e8e93; z-index: 6; }
+  .card .lab { position: absolute; left: 1.2cqw; bottom: 1cqw; font-size: 1.8cqw; font-weight: 700; letter-spacing: .12em; color: #a1a1a6; z-index: 6; text-shadow: none; }
   .card .flipper { z-index: 4; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
   .card .half.top.flipper { transform-origin: 50% 100%; animation: flipTop .24s cubic-bezier(.55, 0, .9, .5) forwards; }
   .card .half.bottom.flipper { transform-origin: 50% 0; transform: rotateX(90deg); animation: flipBot .32s .24s cubic-bezier(.2, .9, .3, 1.25) forwards; }
@@ -511,22 +513,39 @@
   @media (min-width: 700px) and (min-height: 700px) and (hover: none) {
     .stage { width: min(78vw, 56vh, 600px); }
   }
-  /* celular horizontal: círculo a la izquierda, controles a la derecha */
+  /* celular horizontal: círculo a la izquierda; reloj grande y controles a la derecha */
+  .side-clock { display: none; }
   @media (orientation: landscape) and (max-height: 520px) {
     .app {
-      display: grid; align-content: center; justify-content: center; column-gap: 24px; row-gap: 10px;
-      grid-template-columns: auto minmax(260px, 420px);
-      grid-template-areas: "stage seg" "stage muscle" "stage ctrl" "stage stats" "stage hint";
-      padding-top: calc(12px + env(safe-area-inset-top)); padding-bottom: calc(12px + env(safe-area-inset-bottom));
-      padding-left: calc(56px + env(safe-area-inset-left)); padding-right: calc(116px + env(safe-area-inset-right));
+      display: grid; align-content: center; justify-content: center; column-gap: 26px; row-gap: 7px;
+      grid-template-columns: auto minmax(270px, 400px);
+      grid-template-areas: "stage seg" "stage clock" "stage ctrl" "stage muscle" "stage stats";
+      padding-top: calc(10px + env(safe-area-inset-top)); padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      padding-left: calc(48px + env(safe-area-inset-left)); padding-right: calc(112px + env(safe-area-inset-right));
+      height: 100vh; height: 100dvh; overflow: hidden;
     }
-    .stage { grid-area: stage; width: min(42vw, calc(100dvh - 24px)); }
-    .seg { grid-area: seg; justify-self: center; }
-    .musclebar { grid-area: muscle; width: 100%; }
-    .controls { grid-area: ctrl; }
-    .stats { grid-area: stats; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .hint { grid-area: hint; }
-    .stat { padding: 8px 12px; } .stat .val { font-size: 1.05rem; } .stat .meta { display: none; }
+    .stage { grid-area: stage; width: min(43vw, calc(100dvh - 20px)); align-self: center; }
+    .seg { grid-area: seg; justify-self: center; width: 100%; max-width: 270px; }
+    .side-clock { grid-area: clock; display: block; width: 100%; container-type: inline-size; }
+    .side-clock .readout { position: static; }
+    .side-clock .flipclock { gap: 4.5cqw; perspective: 160cqw; }
+    .side-clock .flipclock .grp { gap: 1.6cqw; }
+    .side-clock .card { width: 19cqw; height: 24.5cqw; font-size: 22.5cqw; border-radius: 3cqw;
+      box-shadow: 0 2.5cqw 6cqw -2cqw rgba(0,0,0,.7), inset 0 0 0 .3cqw rgba(255,255,255,.05); }
+    .side-clock .card .half.top { border-radius: 3cqw 3cqw 0 0; }
+    .side-clock .card .half.bottom { border-radius: 0 0 3cqw 3cqw; }
+    .side-clock .card::after { height: .6cqw; margin-top: -.3cqw; }
+    .side-clock .card .lab { font-size: 2.9cqw; left: 2cqw; bottom: 1.6cqw; }
+    .side-clock .flipclock.h3 .card { width: 15.5cqw; height: 22cqw; font-size: 19.5cqw; }
+    .side-clock .sub { font-size: 4.3cqw; margin-top: 1.4cqw; opacity: .9; color: var(--text); text-shadow: none; }
+    .musclebar { grid-area: muscle; width: 100%; padding: 8px 14px; font-size: .82rem; }
+    .controls { grid-area: ctrl; width: 100%; }
+    .controls button { padding: 10px 12px; font-size: .9rem; gap: 6px; flex: 1; justify-content: center; white-space: nowrap; }
+    #main { min-width: 0; flex: 1.6; }
+    .stats { grid-area: stats; width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .hint { display: none; }
+    .stat { padding: 6px 9px; border-radius: 14px; min-width: 0; } .stat .lbl { font-size: .56rem; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .stat .val { font-size: .92rem; margin-top: 1px; } .stat .meta { display: none; }
     .coins, .fab { top: calc(10px + env(safe-area-inset-top)); }
   }
   /* diálogo de confirmación propio (los del navegador pueden estar bloqueados) */
@@ -619,6 +638,7 @@
           </pattern>
           <clipPath id="deckClip"><path d="M-88 0 C-88 -6 -42 -9 8 -9 C50 -9 82 -6 94 -1 C86 4 52 6 8 6 C-42 6 -88 5 -88 0 Z"/></clipPath>
           <radialGradient id="auraG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff2d3a" stop-opacity=".55"/><stop offset=".55" stop-color="#ff5a3c" stop-opacity=".22"/><stop offset="1" stop-color="#ff5a3c" stop-opacity="0"/></radialGradient>
+          <radialGradient id="auraG2" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#39ff6a" stop-opacity=".5"/><stop offset=".55" stop-color="#1fd17a" stop-opacity=".2"/><stop offset="1" stop-color="#1fd17a" stop-opacity="0"/></radialGradient>
           <radialGradient id="hazeG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#c9d4c6" stop-opacity=".55"/><stop offset=".6" stop-color="#b7c4b2" stop-opacity=".25"/><stop offset="1" stop-color="#b7c4b2" stop-opacity="0"/></radialGradient>
           <linearGradient id="swellG" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#46cbe8"/><stop offset="1" stop-color="#1b93c4"/>
@@ -835,11 +855,29 @@
             <rect x="-5.5" y="-4" width="11" height="2.2" fill="#2ec4b6"/>
             <path d="M-2.6 5 L.2 -.6 L2.6 5 Z" fill="#1d1d1f"/>
           </g></g>
+          <g id="shaker" opacity="0"><g id="shakerBody">
+            <path d="M-6.5 -8 L6.5 -8 L5.6 11 Q5.4 13 3.4 13 L-3.4 13 Q-5.4 13 -5.6 11 Z" fill="#1d1d1f" stroke="#3a3a40" stroke-width=".6"/>
+            <rect x="-7" y="-13" width="14" height="5.5" rx="1.6" fill="#e03a3e"/>
+            <rect x="-2" y="-16" width="4" height="3.4" rx="1" fill="#e03a3e"/>
+            <rect x="-5.6" y="-1.5" width="11.2" height="6" rx="1" fill="#f5f5f7"/>
+            <text x="0" y="3.2" text-anchor="middle" font-family="Inter, sans-serif" font-size="4.2" font-weight="900" fill="#1d1d1f">PROT</text>
+          </g></g>
+          <g id="syringe" opacity="0">
+            <rect x="-.45" y="6" width=".9" height="11" fill="#c7ccd1"/>
+            <rect x="-3.4" y="-14" width="6.8" height="20.5" rx="1.4" fill="rgba(230,245,255,.55)" stroke="#9aa7b2" stroke-width=".8"/>
+            <rect id="synLiquid" x="-2.7" y="-6" width="5.4" height="11.8" rx=".8" fill="#46e07a"/>
+            <g id="synPlunger"><rect x="-.9" y="-25" width="1.8" height="12" fill="#8e98a2"/><rect x="-4.6" y="-26.5" width="9.2" height="2.4" rx="1" fill="#6e7882"/><rect x="-2.9" y="-13.6" width="5.8" height="2" rx=".6" fill="#3a3a40"/></g>
+            <rect x="-6" y="-14.6" width="12" height="1.8" rx=".9" fill="#9aa7b2"/>
+          </g>
           <g id="joint" opacity="0">
             <path d="M-6 -1.3 L10 -2 L10 2 L-6 1.3 Z" fill="#f3efe6" stroke="#cfc6b4" stroke-width=".5"/>
             <rect x="-7" y="-1.4" width="3" height="2.8" rx=".6" fill="#d9a066"/>
             <circle id="ember" cx="10.6" cy="0" r="2" fill="#ff6a00"/>
           </g>
+        </g>
+        <g id="flame" opacity="0">
+          <path d="M0 0 C-3.2 -3 -2.6 -8 0 -13 C2.6 -8 3.2 -3 0 0 Z" fill="#ff9f0a"/>
+          <path d="M0 -.5 C-1.6 -2.5 -1.3 -5.5 0 -8.5 C1.3 -5.5 1.6 -2.5 0 -.5 Z" fill="#ffe066"/>
         </g>
         <g id="canFly" opacity="0">
           <rect x="-5.5" y="-6" width="11" height="12" rx="3" fill="#f4f6f8" stroke="#9aa3ad" stroke-width=".8"/>
@@ -851,6 +889,7 @@
           <ellipse class="hz h3" cx="230" cy="220" rx="170" ry="70" fill="url(#hazeG)"/>
           <ellipse class="hz h4" cx="80" cy="250" rx="120" ry="55" fill="url(#hazeG)"/>
         </g>
+        <g id="cheer"></g>
         <g id="parts"></g>
 
         <g class="beach-only">
@@ -874,6 +913,7 @@
    </div>
   </div>
 
+  <div class="side-clock" id="sideClock"></div>
   <div class="musclebar reveal" style="animation-delay:.18s">
     <span>💪</span><b id="level">Pez flaco</b>
     <div class="meter"><i id="meter"></i></div>
@@ -1029,6 +1069,58 @@
       });
     } catch (e) {}
   }
+  // efectos sintetizados: nada de archivos, todo con WebAudio
+  let noiseB = null;
+  function nbuf() {
+    if (!noiseB) {
+      const n = actx.sampleRate * 2; noiseB = actx.createBuffer(1, n, actx.sampleRate);
+      const d = noiseB.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    }
+    return noiseB;
+  }
+  function nz(t, dur, type, freq, q, peak, att = .005) {
+    const src = actx.createBufferSource(); src.buffer = nbuf(); src.loop = true;
+    const f = actx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+    const g = actx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + att);
+    g.gain.exponentialRampToValueAtTime(.0004, t + dur);
+    src.connect(f).connect(g).connect(actx.destination); src.start(t, Math.random() * 1.5); src.stop(t + dur + .05);
+    return f;
+  }
+  function tn(t, dur, type, f0, f1, peak) {
+    const o = actx.createOscillator(), g = actx.createGain(); o.type = type;
+    o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + .006); g.gain.exponentialRampToValueAtTime(.0004, t + dur);
+    o.connect(g).connect(actx.destination); o.start(t); o.stop(t + dur + .05);
+  }
+  function sfx(kind) {
+    if (settings.mute || !settings.sound) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+      const t = actx.currentTime + .02;
+      if (kind === 'can') {                                  // anilla + gas saliendo + burbujas
+        nz(t, .035, 'highpass', 2600, .7, .5, .001);
+        tn(t + .004, .07, 'triangle', 1500, 420, .1);
+        const fz = nz(t + .025, 1.2, 'bandpass', 6200, .55, .2, .025);
+        fz.frequency.exponentialRampToValueAtTime(2400, t + 1.2);
+        for (let i = 0; i < 14; i++) nz(t + .1 + Math.random() * .8, .02, 'highpass', 4200, 1, .02 + .05 * Math.random(), .001);
+      } else if (kind === 'lighter') {                       // dos golpes de piedra, chispas y llama
+        nz(t, .03, 'highpass', 3000, .8, .45, .001);
+        nz(t + .17, .03, 'highpass', 3300, .8, .5, .001);
+        for (let i = 0; i < 7; i++) nz(t + .17 + Math.random() * .14, .015, 'highpass', 5200, 1, .14, .001);
+        nz(t + .22, .95, 'bandpass', 720, .5, .13, .15);
+      } else if (kind === 'cough') {                         // tos suave: "kof, kof, kof"
+        [[0, .42], [.3, .32], [.6, .22]].forEach(([d, pk]) => {
+          nz(t + d, .22, 'bandpass', 620, 1.1, pk, .01);
+          nz(t + d, .13, 'highpass', 1800, .7, pk * .3, .004);
+          tn(t + d, .17, 'triangle', 175, 118, pk * .16);
+        });
+      } else if (kind === 'pinch') {                         // pinchazo de la jeringa
+        tn(t, .06, 'sine', 2400, 1600, .05);
+        nz(t + .05, .5, 'bandpass', 3000, 2, .06, .05);
+      }
+    } catch (e) {}
+  }
   function say(text) {
     if (settings.mute || !('speechSynthesis' in window)) return;
     setTimeout(() => {
@@ -1082,6 +1174,7 @@
     if (timeEl.dataset.key !== key) {
       timeEl.dataset.key = key;
       timeEl.innerHTML = '';
+      timeEl.classList.toggle('h3', groups.length === 3);
       const labels = groups.length === 3 ? ['H', 'MIN', 'SEG'] : ['MIN', 'SEG'];
       groups.forEach((g, gi) => {
         const grp = document.createElement('div');
@@ -1178,7 +1271,8 @@
    'vein1', 'vein2', 'shineArm', 'delt', 'nearHand', 'char', 'board', 'parts', 'medal', 'ribbonA', 'ribbonB', 'medalDisc', 'medalFace',
    'bubble', 'bubbleRect', 'bubbleTail', 'bubbleText', 'cam', 'bigWave', 'bwBody', 'bwShade', 'bwLip', 'bwFoam', 'bwFace', 'bwWhite', 'bigWaveFront', 'bwLipF', 'bwFoamF',
    'boardDeck', 'boardDeco', 'boardS1', 'boardS2', 'aura', 'auraE', 'lid', 'beanie', 'zoomLines', 'item', 'can', 'canBody',
-   'joint', 'ember', 'canFly', 'haze'].forEach(id => el[id] = $(id));
+   'joint', 'ember', 'canFly', 'haze',
+   'shaker', 'shakerBody', 'syringe', 'synLiquid', 'synPlunger', 'flame', 'cheer'].forEach(id => el[id] = $(id));
   const D = (id, d) => el[id].setAttribute('d', d);
   const C = (id, p, r) => { const e = el[id]; e.setAttribute('cx', f1(p.x)); e.setAttribute('cy', f1(p.y)); e.setAttribute('r', f1(Math.max(0, r))); };
   const O = (id, o) => el[id].setAttribute('opacity', clamp(o, 0, 1).toFixed(2));
@@ -1221,7 +1315,7 @@
       <circle r="${f1(Math.min(7, R * .34))}" fill="url(#steel)"/>
       <circle r="${f1(Math.min(3, R * .15))}" fill="#1c1c1e"/>
       <circle r="${f1(R)}" fill="url(#plShine)"/>`;
-    return { g, pl, kg, s: new Spr(0, 120, 12.5), delay: 0, leaving: false, off: 0, txt: g.querySelector('.txt') };
+    return { g, pl, kg, prog: 0, landed: false, delay: 0, leaving: false, off: 0, txt: g.querySelector('.txt') };
   }
   const collarN = document.createElementNS(NS, 'g');
   collarN.innerHTML = '<circle r="7.5" fill="url(#steel)"/><circle r="3.5" fill="#8e8e93"/>';
@@ -1241,31 +1335,39 @@
       let k = 0;
       while (k < cur.length && k < want.length && cur[k].kg === want[k]) k++;
       const out = cur.slice(k).reverse();
-      out.forEach((p, i) => { p.leaving = true; p.delay = animate ? i * .12 : 0; if (!animate) p.s.x = 0; });
-      const base = animate && out.length ? out.length * .12 + .18 : 0;
+      out.forEach((p, i) => { p.leaving = true; p.prog = animate ? 0 : 1; p.delay = animate ? i * .14 : 0; });
+      const base = animate && out.length ? out.length * .14 + .22 : 0;
       want.slice(k).forEach((kg, i) => {
         const p = makePlate(kg);
-        p.delay = animate ? base + i * .14 : 0;
-        if (!animate) p.s.x = 1;
+        p.delay = animate ? base + i * .2 : 0;
+        if (!animate) { p.prog = 1; p.landed = true; }
         sd.list.push(p);
         sd.parent.insertBefore(p.g, sd.far ? sd.collar.nextSibling : sd.collar);
       });
     }
   }
+  const easeOutSoft = x => 1 - Math.pow(1 - x, 4) + Math.sin(Math.PI * x) * Math.pow(1 - x, 2) * .35;   // llega con un leve sobrepaso
+  const easeInSoft = x => x * x * (.6 * x + .4);
+  const barKick = new Spr(0, 230, 10.5);   // la barra se hunde un poco cuando cae un disco
+  let kickNow = 0;
   function placeSide(sd, hand, dt, spin) {
     let d = 5, outer = 9;
     for (const p of sd.list) {
       if (p.delay > 0) p.delay -= dt;
-      const go = p.delay <= 0;
-      const s = Math.max(0, p.s.step(go ? (p.leaving ? 0 : 1) : (p.leaving ? 1 : 0), dt));
+      else p.prog = Math.min(1, p.prog + dt / (p.leaving ? .5 : .78));
+      const u = p.prog;
+      const e = p.leaving ? 1 - easeInSoft(u) : easeOutSoft(u);
       if (!p.leaving) { p.off = d + p.pl.th; d += p.pl.th + .8; }
-      const off = p.off + (1 - s) * 42;                 // entra/sale deslizándose por la barra
-      p.g.setAttribute('transform', `translate(${f1(hand.x + sd.dir * vU.x * off)} ${f1(hand.y + sd.dir * vU.y * off)})`);
-      p.g.setAttribute('opacity', clamp(s * 1.6, 0, 1).toFixed(2));
-      p.txt.setAttribute('transform', `rotate(${f1(spin)})`);
-      if (s > .03) outer = Math.max(outer, off + p.pl.th + 2);
+      const away = 1 - e;
+      const off = p.off + away * 50;                                   // se desliza por la barra…
+      const lift = Math.sin(Math.PI * clamp(away, 0, 1)) * 10;          // …describiendo un arco suave
+      p.g.setAttribute('transform', `translate(${f1(hand.x + sd.dir * vU.x * off)} ${f1(hand.y + sd.dir * vU.y * off - lift)})`);
+      p.g.setAttribute('opacity', clamp(p.leaving ? (1 - u) * 2.2 : u * 3.5, 0, 1).toFixed(2));
+      p.txt.setAttribute('transform', `rotate(${f1(spin - away * 240 * sd.dir)})`);   // rueda mientras entra
+      if (!p.leaving && !p.landed && u > .72) { p.landed = true; if (sd.dir > 0) barKick.v += 38; }
+      if (e > .02 || !p.leaving) outer = Math.max(outer, off + p.pl.th + 2);
     }
-    sd.list = sd.list.filter(p => { if (p.leaving && p.delay <= 0 && p.s.x < .02) { p.g.remove(); return false; } return true; });
+    sd.list = sd.list.filter(p => { if (p.leaving && p.delay <= 0 && p.prog >= 1) { p.g.remove(); return false; } return true; });
     const co = sd.cs.step(Math.max(outer, d + 2), dt);
     sd.collar.setAttribute('transform', `translate(${f1(hand.x + sd.dir * vU.x * co)} ${f1(hand.y + sd.dir * vU.y * co)})`);
     return co;
@@ -1483,8 +1585,8 @@
 
     // discos (solo en la banca): los cercanos tapan el cuerpo, los lejanos quedan detrás
     const g = P.grab ?? 1;
-    const barN = { x: lerp(RACK.x, hN.x, g), y: lerp(RACK.y, hN.y, g) };
-    const barF = { x: lerp(RACK.x + 4, hF.x, g), y: lerp(RACK.y - 3, hF.y, g) };
+    const barN = { x: lerp(RACK.x, hN.x, g), y: lerp(RACK.y + kickNow, hN.y, g) };
+    const barF = { x: lerp(RACK.x + 4, hF.x, g), y: lerp(RACK.y - 3 + kickNow, hF.y, g) };
     drawPlates(barN, barF, P.gym ?? (1 - wc), dt);
 
     const hd = P.head, ch = Math.cos(hd), shd = Math.sin(hd);
@@ -1778,15 +1880,19 @@
     const wc = clamp(wcS, -.03, 1.05), wv = clamp(wcS, 0, 1);
     const hopS = spr.thop.step(TS.hop, dt), boardS = spr.tbo.step(TS.board, dt), spinS = spr.tspin.step(TS.spin, dt);
     const riseS = spr.trise.step(TS.rise, dt), grabS = clamp(spr.tgrab.step(TS.grab, dt), 0, 1), gymS = spr.tgym.step(TS.gym, dt);
-    const m = muscle(S.mode === 'study' ? e : S.lastStudy);
+    const protTarget = (SPc && SPc.type === 'protein' && SPc.T < 3.5) ? Math.max(0, (shop.protein || 0) - 1) * 600 : (shop.protein || 0) * 600;
+    const protS = Math.max(0, sp2.prot.step(protTarget, dt));        // proteína: +10 min de músculo, crece suave
+    const m = muscle((S.mode === 'study' ? e : S.lastStudy) + protS);
     trans.u = TS.u;
     const SX = specialFrame(dt);
     const sgS = clamp(sp2.sg.step(SX.sg, dt), 0, 1), hmS = clamp(sp2.hm.step(SX.hm, dt), 0, 1);
     const tiltS = sp2.tilt.step(SX.tilt, dt); sp2.drink.step(SX.drink, dt);
     const boostS = clamp(sp2.boost.step(SX.boost, dt), 0, 1); sp2.haze.step(SX.haze, dt); sp2.beanie.step(SX.beanie, dt);
     const cbS = clamp(sp2.cb.step(SX.cb, dt), 0, 1), sipS = clamp(sp2.sip.step(SX.sip, dt), 0, 1);
+    const injS = clamp(sp2.inj.step(SX.inj, dt), 0, 1), flexS = clamp(sp2.flex.step(SX.flex, dt), 0, 1);
     const pumpS = Math.max(0, sp2.pump.step(SX.pump, dt)); sp2.aura.step(SX.aura, dt);
-    const mVis = m + (1.55 - m) * pumpS;          // modo bestia: mamadísimo
+    const mB = .24 + .76 * m;                     // parte con algo de músculo (no tan flaco)
+    const mVis = mB + ((SX.pumpTo || 1.55) - mB) * pumpS;   // modo bestia / anabólicos: mamadísimo
     const breath = Math.sin(ts * 1.7);
     const br = 1 + .015 * breath;
 
@@ -1794,11 +1900,12 @@
     let p = 0, pushing = 0;
     if (S.mode === 'study') {
       const RD = repDur(m), T = RD.down + RD.pause + RD.up + RD.top;
-      if (TS.u >= 1 && sgS > .97 && hmS < .03) repPhase = (repPhase + dt * SX.speed / T) % 1;   // repite cuando tiene la barra
+      if (TS.u >= 1 && sgS > .97 && hmS < .03 && injS < .03 && flexS < .03) repPhase = (repPhase + dt * SX.speed / T) % 1;   // repite cuando tiene la barra
       const r = repState(repPhase * T, RD, m); p = r.p; pushing = r.push;
     }
     const tremor = pushing * m * (1 - boostS) * (1.1 * Math.sin(ts * 41) + .6 * Math.sin(ts * 67));
-    const hy = spr.hand.step(112 + 52 * p, dt) + tremor;   // la barra sigue al objetivo con inercia
+    kickNow = barKick.step(0, dt);
+    const hy = spr.hand.step(112 + 52 * p, dt) + tremor + kickNow * .8;   // la barra sigue al objetivo con inercia
     const pRaw = (hy - 112) / 52;
     const push = S.mode === 'study' ? clamp(Math.max(-spr.hand.v / 90, pushing * (.35 + .65 * m)), 0, 1) : 0;
     const bH = { x: 258, y: 190 - 2.5 * push + .8 * breath + TS.squash }, bT = Math.PI;
@@ -1814,9 +1921,23 @@
     const cbF = { x: lerp(204, 216, SX.beatF), y: lerp(120, chestY + 2, SX.beatF) };
     const nearT2 = { x: lerp(nearT.x, cbN.x, cbS), y: lerp(nearT.y, cbN.y, cbS) };
     const farT = { x: lerp(hand.x + 4, cbF.x, cbS), y: lerp(hand.y - 3, cbF.y, cbS) };
-    const aN = ik(bSh, nearT2, Lu, Lf, (a, b) => a.x > b.x);
+    // inyección: la mano lleva la jeringa al pecho
+    const injPt = { x: 207, y: chestY - 9 + (SX.plunger ? Math.sin(ts * 40) * .4 : 0) };
+    const nearT3 = { x: lerp(nearT2.x, injPt.x, injS), y: lerp(nearT2.y, injPt.y, injS) };
+    const aN = ik(bSh, nearT3, Lu, Lf, (a, b) => a.x > b.x);
     const aF = ik(add(bSh, nB, -3), farT, Lu, Lf, (a, b) => a.x > b.x);
-    if (SX.impact) {
+    if (flexS > .001) {                      // pose de bíceps tras la proteína
+      const fl = Math.sin(ts * 5) * 2.5;
+      const fN = ik(bSh, { x: 181 + fl, y: 152 - fl }, Lu, Lf, (a, b) => a.y < b.y);
+      const fF = ik(add(bSh, nB, -3), { x: 190 - fl, y: 146 + fl }, Lu, Lf, (a, b) => a.y < b.y);
+      aN.a1 = lerpA(aN.a1, fN.a1, flexS); aN.a2 = lerpA(aN.a2, fN.a2, flexS);
+      aF.a1 = lerpA(aF.a1, fF.a1, flexS); aF.a2 = lerpA(aF.a2, fF.a2, flexS);
+    }
+    if (SX.impact === 'inj') {
+      shakeV = 2.2;
+      for (let i = 0; i < 8; i++) emit(injPt.x + rnd(-4, 4), injPt.y + 6, rnd(-60, 60), rnd(-90, -30), .4, rnd(1, 2), i % 2 ? '#ffffff' : '#9dffb8', 280);
+    }
+    if (SX.impact === 'n' || SX.impact === 'f') {
       const ip = SX.impact === 'n' ? cbN : cbF;
       shakeV = 2.6;
       for (let i = 0; i < 9; i++) emit(ip.x + rnd(-6, 6), ip.y + rnd(-2, 4), rnd(-90, 90), rnd(-120, -40), .45, rnd(1.2, 2.4), i % 3 ? '#ffffff' : '#ffd0c8', 300);
@@ -2280,8 +2401,9 @@
   // =====================================================
   const SHOPKEY = 'sharkFocus.shop.v1';
   const START_COINS = 3;   // quien parte desde cero recibe 3 monedas
-  const shop = Object.assign({ coins: START_COINS, inv: { monster: 0, porro: 0 }, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, load(SHOPKEY, {}));
-  shop.inv = Object.assign({ monster: 0, porro: 0 }, shop.inv);
+  const INV0 = { monster: 0, porro: 0, cheer: 0, protein: 0, roids: 0 };
+  const shop = Object.assign({ coins: START_COINS, inv: { ...INV0 }, protein: 0, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, load(SHOPKEY, {}));
+  shop.inv = Object.assign({ ...INV0 }, shop.inv);
   const saveShop = () => store(SHOPKEY, shop);
   function hexMix(a, b, t) {
     const ch = h => { const v = parseInt(h.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
@@ -2312,6 +2434,9 @@
   const SPECIALS = {
     monster: { name: 'Lata energética', price: 3, desc: 'Prueba un boost de energía.' },
     porro:   { name: 'Porro',           price: 3, desc: 'Vuela por un rato.' },
+    cheer:   { name: 'Porristas',       price: 3, desc: 'Llegan a animarlo y entrena con más ganas por 45 s.' },
+    protein: { name: 'Proteína',        price: 5, desc: 'Músculo permanente: como si hubiera estudiado 10 min más.' },
+    roids:   { name: 'Anabólicos',      price: 4, desc: 'Un pinchazo y crece muchísimo… pero a los 45 s se desinfla.' },
   };
   if (!BOARDS[shop.board]) shop.board = 'clasica';
   if (!SHORTS[shop.shorts]) shop.shorts = 'clasico';
@@ -2332,6 +2457,10 @@
   const canSVG = '<svg viewBox="-30 -14 60 28"><g transform="rotate(-12)"><rect x="-6" y="-11" width="12" height="22" rx="3" fill="#f4f6f8" stroke="#9aa3ad" stroke-width=".9"/><ellipse cx="0" cy="-11" rx="6" ry="1.7" fill="#c9cfd6"/><rect x="-6" y="-4.5" width="12" height="2.4" fill="#2ec4b6"/><path d="M-2.8 6 L.2 -.6 L2.8 6 Z" fill="#1d1d1f"/></g><text x="16" y="4" font-size="9" fill="#fff" font-weight="800" font-family="Inter, sans-serif">⚡</text></svg>';
   const jointSVG = '<svg viewBox="-30 -14 60 28"><g transform="rotate(-14) scale(1.6)"><path d="M-6 -1.3 L10 -2 L10 2 L-6 1.3 Z" fill="#f3efe6"/><rect x="-7" y="-1.4" width="3" height="2.8" rx=".6" fill="#d9a066"/><circle cx="10.6" r="2" fill="#ff6a00"/></g><circle cx="22" cy="-7" r="3" fill="#cfd3d6" opacity=".6"/><circle cx="25" cy="-11" r="4" fill="#cfd3d6" opacity=".4"/></svg>';
 
+  const pomSVG = '<svg viewBox="-30 -14 60 28"><g transform="translate(-9 0)"><circle r="9" fill="#e03a3e"/><circle cx="-4" cy="-4" r="5" fill="#fff"/><circle cx="4.5" cy="3" r="5" fill="#ffd60a"/><circle cx="-3" cy="5" r="4.5" fill="#e03a3e"/><circle cx="5" cy="-4" r="4" fill="#fff"/></g><g transform="translate(11 2) scale(.8)"><circle r="9" fill="#fff"/><circle cx="-4" cy="-4" r="5" fill="#e03a3e"/><circle cx="4.5" cy="3" r="5" fill="#e03a3e"/><circle cx="5" cy="-4" r="4" fill="#ffd60a"/></g><text x="22" y="-6" font-size="8" fill="#fff">📣</text></svg>';
+  const shakerSVG = '<svg viewBox="-30 -16 60 32"><g transform="rotate(-10) scale(1.05)"><path d="M-6.5 -8 L6.5 -8 L5.6 11 Q5.4 13 3.4 13 L-3.4 13 Q-5.4 13 -5.6 11 Z" fill="#2a2a2e" stroke="#55555c" stroke-width=".8"/><rect x="-7" y="-13" width="14" height="5.5" rx="1.6" fill="#e03a3e"/><rect x="-2" y="-16" width="4" height="3.4" rx="1" fill="#e03a3e"/><rect x="-5.6" y="-1.5" width="11.2" height="6" rx="1" fill="#f5f5f7"/><text x="0" y="3.2" text-anchor="middle" font-family="Inter, sans-serif" font-size="4.2" font-weight="900" fill="#1d1d1f">PROT</text></g><text x="13" y="4" font-size="9">💪</text></svg>';
+  const syringeSVG = '<svg viewBox="-30 -16 60 32"><g transform="rotate(55) scale(.95)"><rect x="-.45" y="6" width=".9" height="11" fill="#c7ccd1"/><rect x="-3.4" y="-14" width="6.8" height="20.5" rx="1.4" fill="rgba(230,245,255,.6)" stroke="#9aa7b2" stroke-width=".8"/><rect x="-2.7" y="-6" width="5.4" height="11.8" rx=".8" fill="#46e07a"/><rect x="-.9" y="-25" width="1.8" height="12" fill="#8e98a2"/><rect x="-4.6" y="-26.5" width="9.2" height="2.4" rx="1" fill="#6e7882"/><rect x="-6" y="-14.6" width="12" height="1.8" rx=".9" fill="#9aa7b2"/></g></svg>';
+  const SP_ICONS = { monster: canSVG, porro: jointSVG, cheer: pomSVG, protein: shakerSVG, roids: syringeSVG };
   let shopTab = 'esp';
   const canUseSpecial = () => S.mode === 'study' && !SPc && trans.u >= 1;
   function updateCoins(b) {
@@ -2345,7 +2474,7 @@
     if (shopTab === 'esp') {
       html = Object.entries(SPECIALS).map(([k, it], i) => `
         <div class="it" style="animation-delay:${i * .05}s">
-          <div class="pv dk">${k === 'monster' ? canSVG : jointSVG}</div>
+          <div class="pv dk">${SP_ICONS[k]}</div>
           <div class="nm"><b>${it.name}</b><span>${C(it.price)}</span></div>
           <p>${it.desc}</p>
           <div class="acts">
@@ -2432,17 +2561,20 @@
     sg: new Spr(1, 160, 25), hm: new Spr(0, 90, 19), tilt: new Spr(0, 80, 18), drink: new Spr(0, 60, 15),
     boost: new Spr(0, 20, 9), haze: new Spr(0, 3, 3.4), beanie: new Spr(0, 140, 11), itemV: new Spr(0, 120, 22),
     jm: new Spr(0, 40, 12.6), ember: new Spr(.4, 60, 15),
-    cb: new Spr(0, 160, 25), sip: new Spr(0, 60, 15.5), pump: new Spr(0, 90, 9), aura: new Spr(0, 20, 9),
+    cb: new Spr(0, 160, 25), sip: new Spr(0, 60, 15.5), pump: new Spr(0, 70, 8.5), aura: new Spr(0, 20, 9),
+    inj: new Spr(0, 70, 16), flex: new Spr(0, 55, 13), plunger: new Spr(0, 30, 11), cheerIn: new Spr(0, 22, 8.6),
+    prot: new Spr((shop.protein || 0) * 600, 6, 4.9),
   };
   function startSpecial(type) {
-    SPc = { type, t: 0, T: 0, L: SP_TOTAL, f: {}, phase: 'gym' };
+    SPc = { type, t: 0, T: 0, L: type === 'protein' ? 6.8 : SP_TOTAL, f: {}, phase: 'gym' };
+    if (type === 'protein') { shop.protein = (shop.protein || 0) + 1; saveShop(); }   // el efecto queda guardado de inmediato
     renderStats && body.classList.contains('sheet-open') && renderStats();
   }
   function cancelSpecial() { SPc = null; }
   // al pasar a descansar, el especial sigue con su propio mood en la playa
   function specialModeChange(mode) {
     if (!SPc) return;
-    if (mode === 'rest' && SPc.phase === 'gym') {
+    if (mode === 'rest' && SPc.phase === 'gym' && SPc.type !== 'protein') {
       SPc.phase = 'rest'; SPc.t = 0;
       SPc.L = SP_TOTAL + REST_BONUS;                       // al pasar a la playa: 15 s extra
       const left = SPc.L - SPc.T;
@@ -2453,7 +2585,8 @@
   const SP_TOTAL = 45, REST_BONUS = 15;   // 45 s en total; +15 s si pasa a descansar
   function specialFrame(dt) {
     const o = { sg: 1, hm: 0, tilt: 0, drink: 0, speed: 1, boost: 0, aura: 0, pump: 0, plates: false, cb: 0, beatN: 0, beatF: 0,
-                impact: null, sip: 0, haze: 0, beanie: 0, item: null, mouth: 0, ember: .4, crush: 0 };
+                impact: null, sip: 0, haze: 0, beanie: 0, item: null, mouth: 0, ember: .4, crush: 0,
+                pumpTo: 1.55, auraCol: 'red', inj: 0, plunger: 0, flex: 0, cheer: 0, flame: 0, sparkle: false, deflate: false };
     if (!SPc) return o;
     SPc.t += dt; SPc.T += dt;
     const t = SPc.t, T = SPc.T, f = SPc.f;
@@ -2463,7 +2596,19 @@
     // ----- mood en la playa (sigue el mismo reloj) -----
     if (SPc.phase === 'rest') {
       if (S.mode !== 'rest') { SPc = null; return o; }
+      if (SPc.type === 'roids') {
+        o.pumpTo = 2; o.auraCol = 'green';
+        o.pump = T < L - 2.2 ? 1 : clamp((L - .3 - T) / 1.9, 0, 1);
+        o.deflate = T > L - 2.2 && T < L - .3;
+        o.aura = T < L - 2.2 ? .45 : 0;
+        return o;
+      }
+      if (SPc.type === 'cheer') {
+        o.cheer = T < L - 1.6 ? 1 : 0;
+        return o;
+      }
       if (SPc.type === 'monster') {
+        if (t > .4 && !f.ropen) { f.ropen = true; sfx('can'); f.spray = .35; }
         o.item = T < L - 2 ? 'can' : null;
         o.pump = T < L - 1.6 ? 1 : 0;
         o.aura = T < L - 1.6 ? .45 : 0;
@@ -2489,7 +2634,43 @@
 
     // ----- en el gym -----
     if (S.mode !== 'study') { SPc = null; return o; }
+    if (SPc.type === 'protein') {
+      o.sg = inR(T, .05, 6.1) ? 0 : 1;
+      o.item = inR(T, .35, 3.2) ? 'shaker' : null;
+      o.hm = inR(T, 1.0, 3.0) ? 1 : 0;
+      o.tilt = inR(T, 1.6, 2.9) ? -.36 : 0;
+      o.drink = inR(T, 1.6, 2.9) ? 1 : 0;
+      o.shake = inR(T, .4, 1.0);
+      o.flex = inR(T, 3.2, 5.9) ? 1 : 0;
+      o.pump = inR(T, 3.5, 5.9) ? .22 : 0;
+      if (T > 3.5 && !f.grow) { f.grow = true; o.sparkle = true; showBubble('+10 MIN DE MÚSCULO 💪', 2.6); }
+      return o;
+    }
+    if (SPc.type === 'roids') {
+      o.sg = (inR(T, .05, 4.8) || inR(T, 42.5, 44.4)) ? 0 : 1;
+      o.item = inR(T, .4, 3.3) ? 'syringe' : null;
+      o.inj = inR(T, .6, 3.0) ? 1 : 0;
+      o.plunger = T > 1.5 ? 1 : 0;
+      if (T > 1.45 && !f.pinch) { f.pinch = true; sfx('pinch'); }
+      if (T > 2.3 && !f.ouch) { f.ouch = true; o.impact = 'inj'; }
+      o.tilt = inR(T, 2.3, 2.9) ? -.22 : 0;
+      o.pumpTo = 2; o.auraCol = 'green';
+      o.pump = T < 2.5 ? 0 : (T < 42.6 ? 1 : clamp((44.5 - T) / 1.9, 0, 1));
+      o.deflate = inR(T, 42.6, 44.5);
+      o.boost = inR(T, 4.8, 42.5) ? 1 : 0;
+      o.aura = o.boost ? 1 : (inR(T, 2.5, 42.6) ? .6 : 0);
+      o.speed = o.boost ? 2.4 : 1;
+      if (T > 4.9 && !f.s1) { f.s1 = true; toast('💉 ¡Modo bestia!', 1500); }
+      return o;
+    }
+    if (SPc.type === 'cheer') {
+      o.cheer = T < 43.4 ? 1 : 0;
+      o.speed = inR(T, 1.2, 43.4) ? 1.7 : 1;
+      if (T > 1.4 && !f.s1) { f.s1 = true; toast('📣 ¡Llegaron las porristas!', 1800); }
+      return o;
+    }
     if (SPc.type === 'monster') {
+      if (T > .95 && !f.open) { f.open = true; sfx('can'); f.spray = .35; }
       o.sg = (inR(T, .05, 5.6) || inR(T, 42.5, 44.4)) ? 0 : 1;
       o.hm = inR(T, .6, 3.3) ? 1 : 0;
       o.item = inR(T, .45, 3.45) ? 'can' : null;
@@ -2523,6 +2704,9 @@
       o.ember = drag ? 1 : .45;
       o.tilt = drag ? -.14 : 0;
       for (const [k, at] of [['e1', 2.35], ['e2', 3.75]]) if (T > at && !f[k]) { f[k] = true; f.exhale = .8; }
+      if (T > .95 && !f.lit) { f.lit = true; sfx('lighter'); }
+      o.flame = inR(T, 1.17, 1.75) ? 1 : 0;
+      if (T > 2.55 && !f.cough) { f.cough = true; sfx('cough'); f.coughT = 0; }
       o.haze = inR(T, 5, 43) ? 1 : 0;
       o.speed = inR(T, 5.5, 43) ? .75 : 1;
       if (T > 5.6 && !f.s1) { f.s1 = true; showBubble('TRANQUI… 🌿', 3); }
@@ -2530,6 +2714,100 @@
     }
     return o;
   }
+
+  // ---------- Porristas ----------
+  const POM = '<circle r="7" fill="#e03a3e"/><circle cx="-3.2" cy="-3" r="4.2" fill="#fff"/><circle cx="3.6" cy="2.6" r="4.2" fill="#ffd60a"/><circle cx="-2.2" cy="4.2" r="3.6" fill="#e03a3e"/><circle cx="4" cy="-3.4" r="3.2" fill="#fff"/>';
+  function cheerMarkup(skin, hair) {
+    const arm = side => `<g class="arm${side}" transform="translate(${side === 'L' ? -10 : 10} -66)"><rect x="-2.6" y="-1" width="5.2" height="24" rx="2.6" fill="${skin}"/><g class="pom" transform="translate(0 25)">${POM}</g></g>`;
+    const leg = side => `<g class="leg${side}" transform="translate(${side === 'L' ? -4.5 : 4.5} -33)"><rect x="-3.3" y="0" width="6.6" height="30" rx="3.3" fill="${skin}"/><rect x="-4.8" y="26" width="9.6" height="6.5" rx="3" fill="#fff"/><rect x="-4.8" y="26" width="9.6" height="1.6" fill="#e03a3e"/></g>`;
+    return `<ellipse class="sh" cx="0" cy="1" rx="15" ry="3" fill="#000" opacity=".22"/>
+      <g class="fig">
+        ${leg('L')}${leg('R')}
+        <path d="M-12 -46 L12 -46 L17 -31 L-17 -31 Z" fill="#e03a3e"/>
+        <path d="M-17 -31 L17 -31 L16.4 -28.8 L-16.4 -28.8 Z" fill="#fff"/>
+        <path d="M-6 -46 L-8.5 -31 M0 -46 L0 -31 M6 -46 L8.5 -31" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+        <path d="M-10 -68 Q0 -71 10 -68 L9.6 -45 L-9.6 -45 Z" fill="#e03a3e"/>
+        <path d="M-10 -68 L0 -60.5 L10 -68" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        <text x="0" y="-49" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="900" fill="#fff">S</text>
+        <rect x="-2.6" y="-75" width="5.2" height="8" fill="${skin}"/>
+        ${arm('L')}${arm('R')}
+        <g class="head" transform="translate(0 -84)">
+          <g class="pony"><path d="M6 -7 C19 -5 21 8 15 17 C13 9 9.5 2.5 4 .5 Z" fill="${hair}"/></g>
+          <circle r="10.2" fill="${skin}"/>
+          <path d="M-10.8 0 C-11.5 -13 11.5 -13 10.8 0 C7.5 -6.5 -7.5 -6.5 -10.8 0 Z" fill="${hair}"/>
+          <path d="M5 -8.5 l4.5 -3.2 l.6 4.2 Z M5 -8.5 l3.6 2.8 l-4.4 1.4 Z" fill="#e03a3e"/>
+          <ellipse cx="-3.7" cy="1.2" rx="1.25" ry="1.5" fill="#1d1d1f"/><ellipse cx="3.7" cy="1.2" rx="1.25" ry="1.5" fill="#1d1d1f"/>
+          <path d="M-3.2 5 Q0 8.2 3.2 5" stroke="#b5384a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <circle cx="-6.6" cy="4.2" r="1.9" fill="#ff8fa3" opacity=".45"/><circle cx="6.6" cy="4.2" r="1.9" fill="#ff8fa3" opacity=".45"/>
+        </g>
+      </g>
+      <text class="chant" x="0" y="-112" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="900" fill="#fff" stroke="#e03a3e" stroke-width="3" paint-order="stroke" opacity="0"></text>`;
+  }
+  const CHEERS = [
+    { home: { x: 58, y: 258 }, side: -1, phase: 0, skin: '#f1c7a5', hair: '#f2c14e' },
+    { home: { x: 348, y: 258 }, side: 1, phase: Math.PI * .5, skin: '#c98f6a', hair: '#3b2414' },
+  ].map(c => {
+    const g = document.createElementNS(NS, 'g');
+    g.innerHTML = cheerMarkup(c.skin, c.hair);
+    el.cheer.appendChild(g);
+    const q = sel => g.querySelector(sel);
+    return Object.assign(c, { g, fig: q('.fig'), sh: q('.sh'), aL: q('.armL'), aR: q('.armR'), lL: q('.legL'), lR: q('.legR'),
+      head: q('.head'), pony: q('.pony'), poms: g.querySelectorAll('.pom'), chant: q('.chant') });
+  });
+  const CHANTS = ['¡VAMOS SHARK!', '¡UNA MÁS!', '¡TÚ PUEDES!', '¡DALE QUE VA!'];
+  let confettiT = 0;
+  function drawCheer(SX, dt, ts) {
+    const cin = clamp(sp2.cheerIn.step(SX.cheer, dt), -.05, 1.05);
+    if (cin < .002 && !SX.cheer) { el.cheer.setAttribute('opacity', 0); return; }
+    el.cheer.setAttribute('opacity', 1);
+    const moving = Math.abs(sp2.cheerIn.v) > .08;
+    for (const [i, c] of CHEERS.entries()) {
+      const x = c.home.x + c.side * (1 - cin) * 150;
+      const ph = ts * 3.4 + c.phase;
+      const pattern = Math.floor(ts / 2.6 + i * .5) % 3;
+      let jump = 0, aL = 160, aR = -160, kL = 0, kR = 0, run = 0;
+      if (moving) {                                         // entra corriendo
+        run = Math.sin(ts * 15 + i);
+        kL = 28 * run; kR = -28 * run; aL = 25 - 30 * run; aR = -25 - 30 * run; jump = Math.abs(run) * 2.5;
+      } else if (pattern === 0) {                           // "V" saltando
+        jump = Math.abs(Math.sin(ph)) * 11;
+        aL = 150 + 12 * Math.sin(ph * 2); aR = -150 - 12 * Math.sin(ph * 2);
+        kL = 12 * Math.abs(Math.sin(ph)); kR = -kL;
+      } else if (pattern === 1) {                           // brazos alternados
+        jump = Math.abs(Math.sin(ph)) * 6;
+        const a = Math.sin(ph);
+        aL = 100 + 70 * a; aR = -100 + 70 * a;
+      } else {                                              // patada con manos arriba
+        const k = Math.max(0, Math.sin(ph * .5));
+        aL = 165; aR = -165; kR = -82 * k * k; jump = 1.5 * Math.sin(ph);
+      }
+      c.g.setAttribute('transform', `translate(${f1(x)} ${f1(c.home.y)}) scale(.95)`);
+      c.fig.setAttribute('transform', `translate(0 ${f1(-jump)})`);
+      c.sh.setAttribute('rx', f1(15 - jump * .5)); c.sh.setAttribute('opacity', (.22 - jump * .008).toFixed(3));
+      c.aL.setAttribute('transform', `translate(-10 -66) rotate(${f1(aL)})`);
+      c.aR.setAttribute('transform', `translate(10 -66) rotate(${f1(aR)})`);
+      c.lL.setAttribute('transform', `translate(-4.5 -33) rotate(${f1(kL)})`);
+      c.lR.setAttribute('transform', `translate(4.5 -33) rotate(${f1(kR)})`);
+      c.head.setAttribute('transform', `translate(0 -84) rotate(${f1(5 * Math.sin(ph))})`);
+      c.pony.setAttribute('transform', `rotate(${f1(14 * Math.sin(ph * 2 + 1))} 6 -6)`);
+      const ps = (1 + .14 * Math.sin(ph * 4)).toFixed(3);
+      c.poms.forEach(pm => pm.setAttribute('transform', `translate(0 25) scale(${ps}) rotate(${f1(25 * Math.sin(ph * 3))})`));
+      // cánticos: aparecen y se van con suavidad
+      const cyc = (ts + i * 1.6) % 3.2, show = !moving && SX.cheer ? sstep(0, .25, cyc) * (1 - sstep(1.5, 1.85, cyc)) : 0;
+      if (cyc < .05) c.chant.textContent = CHANTS[Math.floor((ts + i * 1.6) / 3.2) % CHANTS.length];
+      c.chant.setAttribute('opacity', show.toFixed(2));
+      c.chant.setAttribute('transform', `translate(0 ${f1(-jump - 6 * show)})`);
+    }
+    // confeti cada tanto
+    confettiT -= dt;
+    if (!moving && SX.cheer && confettiT <= 0) {
+      confettiT = 2.8;
+      const cols = ['#e03a3e', '#ffd60a', '#ffffff', '#2ec4b6', '#ff8fa3'];
+      for (const c of CHEERS) for (let k = 0; k < 16; k++)
+        emit(c.home.x + rnd(-14, 14), c.home.y - 110, rnd(-70, 70), rnd(-160, -60), rnd(1.2, 1.9), rnd(1.4, 2.4), cols[k % cols.length], 170);
+    }
+  }
+
   // dibuja objetos, humo, aura, etc. después del tiburón
   function drawSpecialFx(SX, out, dt, ts, m) {
     lastMouth = out.mouth; lastHand = out.hN;
@@ -2559,13 +2837,49 @@
       el.ember.setAttribute('r', f1(1.5 + 1.3 * eg));
       el.ember.setAttribute('fill', mix('#a83a00', '#ffb000', eg));
       const ep = add(pos, dirv(ang), 10.6);
+      const fl = clamp(SX.flame, 0, 1);                      // llama del encendedor
+      el.flame.setAttribute('opacity', fl ? (.85 + .15 * Math.sin(ts * 50)).toFixed(2) : 0);
+      el.flame.setAttribute('transform', `translate(${f1(ep.x + 2)} ${f1(ep.y + 7)}) scale(${(1 + .12 * Math.sin(ts * 37)).toFixed(3)})`);
+      if (fl && Math.random() < .5) emit(ep.x + rnd(-1, 1), ep.y, rnd(-20, 20), rnd(-50, -20), .25, rnd(.6, 1.1), '#ffd166', -30);
+      if (SPc && SPc.f.coughT != null && SPc.f.coughT < .9) {   // bocanadas sincronizadas con la tos
+        const prev = SPc.f.coughT; SPc.f.coughT += dt;
+        for (const at of [0, .3, .6]) if (prev <= at && SPc.f.coughT > at)
+          for (let i = 0; i < 7; i++) emit(mo.x, mo.y, Math.cos(out.headA) * rnd(40, 80) + rnd(-15, 15), Math.sin(out.headA) * rnd(40, 80) - rnd(10, 30), rnd(1.2, 2), rnd(2.5, 4), '#e4e7e9', -12, 2.4);
+      }
       smokeAcc += dt * (2 + 4 * eg) * iv;
       while (smokeAcc > 1) { smokeAcc--; emit(ep.x, ep.y, rnd(-6, 6), rnd(-28, -18), 2.4, 2.2, '#d5d9dc', -8, 2.6); }
       if (SPc && SPc.f.exhale > 0) {
         SPc.f.exhale -= dt;
         for (let i = 0; i < 3; i++) emit(mo.x, mo.y, Math.cos(out.headA) * rnd(30, 60) + rnd(-10, 10), Math.sin(out.headA) * rnd(30, 60) - 20, rnd(2, 3), rnd(3, 5), '#dfe2e4', -10, 3);
       }
-    } else el.joint.setAttribute('opacity', 0);
+    } else { el.joint.setAttribute('opacity', 0); el.flame.setAttribute('opacity', 0); }
+    // batido de proteína
+    if (curItem === 'shaker' && iv > .01) {
+      const dr = clamp(sp2.drink.x, 0, 1);
+      const wob = SX.shake ? Math.sin(ts * 38) * 22 : 0;
+      const rot = (angOf(hN, mo) + Math.PI / 2) * 180 / Math.PI + 80 * dr + wob;
+      el.shaker.setAttribute('opacity', iv.toFixed(2));
+      el.shaker.setAttribute('transform', `translate(${f1(hN.x)} ${f1(hN.y)}) rotate(${f1(rot)}) scale(1.35)`);
+      if (dr > .5) { glugAcc += dt * 8; while (glugAcc > 1) { glugAcc--; emit(mo.x + rnd(-3, 3), mo.y, rnd(-10, 10), rnd(-40, -20), .45, 1.3, '#f3e7d3', 0); } }
+    } else el.shaker.setAttribute('opacity', 0);
+    // jeringa: apunta al pecho y el émbolo baja suave
+    if (curItem === 'syringe' && iv > .01) {
+      const pl = clamp(sp2.plunger.step(SX.plunger, dt), 0, 1);
+      el.syringe.setAttribute('opacity', iv.toFixed(2));
+      el.syringe.setAttribute('transform', `translate(${f1(hN.x + 1)} ${f1(hN.y + 2)}) rotate(${f1(-8 + 6 * Math.sin(ts * 1.5))}) scale(1.25)`);
+      el.synPlunger.setAttribute('transform', `translate(0 ${f1(pl * 10)})`);
+      el.synLiquid.setAttribute('y', f1(-6 + pl * 10.5)); el.synLiquid.setAttribute('height', f1(Math.max(.2, 11.8 - pl * 10.5)));
+    } else { el.syringe.setAttribute('opacity', 0); sp2.plunger.x = 0; sp2.plunger.v = 0; }
+    // spray al abrir la lata
+    if (SPc && SPc.f.spray > 0) {
+      SPc.f.spray -= dt;
+      for (let i = 0; i < 2; i++) emit(hN.x + rnd(-2, 2), hN.y - 14, rnd(-25, 25), rnd(-90, -50), .4, rnd(.8, 1.6), '#eafff6', 120);
+    }
+    // destellos dorados al crecer con la proteína
+    if (SX.sparkle) for (let i = 0; i < 26; i++) { const a = rnd(0, TAU), r = rnd(10, 46); emit(out.H.x - 30 + Math.cos(a) * r, out.H.y - 4 + Math.sin(a) * r * .6, Math.cos(a) * 30, -rnd(20, 70), rnd(.6, 1.1), rnd(1.2, 2.4), i % 3 ? '#ffd60a' : '#ffffff', 40); }
+    // se desinfla: soplidos de aire
+    if (SX.deflate) { steamAcc += dt * 14; while (steamAcc > 1) { steamAcc--; const a = rnd(0, TAU); emit(out.H.x - 30 + Math.cos(a) * 34, out.H.y - 4 + Math.sin(a) * 22, Math.cos(a) * 60, Math.sin(a) * 40 - 20, .6, rnd(1.6, 3), '#e8f6ff', -10, 1.8); } }
+    drawCheer(SX, dt, ts);
     // lata que sale volando
     if (canFlight) {
       const c = canFlight; c.t += dt; c.vy += 700 * dt; c.x += c.vx * dt; c.y += c.vy * dt; c.r += 720 * dt;
@@ -2576,6 +2890,7 @@
     // modo bestia: aura que sigue al tiburón, líneas de velocidad, vapor, ojos rojos
     const ctr = { x: (out.H.x + out.N.x) / 2, y: (out.H.y + out.N.y) / 2 };
     el.aura.setAttribute('opacity', (aura * (.7 + .3 * Math.sin(ts * 9))).toFixed(2));
+    if (SX.aura > 0 || aura < .02) el.auraE.setAttribute('fill', SX.auraCol === 'green' ? 'url(#auraG2)' : 'url(#auraG)');
     el.auraE.setAttribute('cx', f1(ctr.x)); el.auraE.setAttribute('cy', f1(ctr.y));
     el.auraE.setAttribute('rx', f1(105 + 10 * Math.sin(ts * 9))); el.auraE.setAttribute('ry', f1(80 + 7 * Math.sin(ts * 9)));
     el.zoomLines.setAttribute('opacity', (boost * .55).toFixed(2));
@@ -2665,8 +2980,8 @@
     else if (k === SHOPKEY) {
       const d = v || {};
       for (const key of Object.keys(shop)) delete shop[key];
-      Object.assign(shop, { coins: START_COINS, inv: { monster: 0, porro: 0 }, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, d);
-      shop.inv = Object.assign({ monster: 0, porro: 0 }, d.inv);
+      Object.assign(shop, { coins: START_COINS, inv: { ...INV0 }, protein: 0, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, d);
+      shop.inv = Object.assign({ ...INV0 }, d.inv);
       if (!BOARDS[shop.board]) shop.board = 'clasica';
       if (!SHORTS[shop.shorts]) shop.shorts = 'clasico';
     }
@@ -2793,6 +3108,16 @@
     if (S.mode === 'rest') logBlock('r', S.elapsed);
   });
   if ('speechSynthesis' in window) speechSynthesis.getVoices();
+
+  // en celular horizontal el reloj sale del círculo y queda grande a la derecha
+  const mqLand = matchMedia('(orientation: landscape) and (max-height: 520px)');
+  function placeReadout() {
+    const r = document.querySelector('.readout');
+    const dest = mqLand.matches ? $('sideClock') : document.querySelector('.window');
+    if (r && r.parentNode !== dest) dest.appendChild(r);
+  }
+  mqLand.addEventListener ? mqLand.addEventListener('change', placeReadout) : mqLand.addListener(placeReadout);
+  placeReadout();
 
   setSub(START_TXT);
   updateButton();
