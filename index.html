@@ -741,6 +741,18 @@
           </g>
         </g>
 
+        <g id="partyBack" opacity="0">
+          <rect id="partyDim" x="-60" y="-60" width="520" height="520" fill="#1b0716" opacity=".5"/>
+          <g id="beams" style="mix-blend-mode: screen"></g>
+          <g id="refl"></g>
+          <g id="discoBall">
+            <line x1="0" y1="-120" x2="0" y2="-15" stroke="#8e8e93" stroke-width="1.2"/>
+            <clipPath id="ballClip"><circle r="15"/></clipPath>
+            <circle r="15" fill="url(#steel)"/>
+            <g clip-path="url(#ballClip)" id="ballFacets"></g>
+            <circle r="15" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
+          </g>
+        </g>
         <g id="aura" opacity="0"><ellipse id="auraE" cx="228" cy="178" rx="100" ry="72" fill="url(#auraG)"/></g>
 
         <!-- ===== Tiburón (geometría generada en JS) ===== -->
@@ -890,6 +902,7 @@
           <ellipse class="hz h4" cx="80" cy="250" rx="120" ry="55" fill="url(#hazeG)"/>
         </g>
         <g id="cheer"></g>
+        <g id="dancers"></g>
         <g id="parts"></g>
 
         <g class="beach-only">
@@ -1272,7 +1285,7 @@
    'bubble', 'bubbleRect', 'bubbleTail', 'bubbleText', 'cam', 'bigWave', 'bwBody', 'bwShade', 'bwLip', 'bwFoam', 'bwFace', 'bwWhite', 'bigWaveFront', 'bwLipF', 'bwFoamF',
    'boardDeck', 'boardDeco', 'boardS1', 'boardS2', 'aura', 'auraE', 'lid', 'beanie', 'zoomLines', 'item', 'can', 'canBody',
    'joint', 'ember', 'canFly', 'haze',
-   'shaker', 'shakerBody', 'syringe', 'synLiquid', 'synPlunger', 'flame', 'cheer'].forEach(id => el[id] = $(id));
+   'shaker', 'shakerBody', 'syringe', 'synLiquid', 'synPlunger', 'flame', 'cheer', 'partyBack', 'partyDim', 'beams', 'refl', 'discoBall', 'ballFacets', 'dancers'].forEach(id => el[id] = $(id));
   const D = (id, d) => el[id].setAttribute('d', d);
   const C = (id, p, r) => { const e = el[id]; e.setAttribute('cx', f1(p.x)); e.setAttribute('cy', f1(p.y)); e.setAttribute('r', f1(Math.max(0, r))); };
   const O = (id, o) => el[id].setAttribute('opacity', clamp(o, 0, 1).toFixed(2));
@@ -2401,7 +2414,7 @@
   // =====================================================
   const SHOPKEY = 'sharkFocus.shop.v1';
   const START_COINS = 3;   // quien parte desde cero recibe 3 monedas
-  const INV0 = { monster: 0, porro: 0, cheer: 0, protein: 0, roids: 0 };
+  const INV0 = { monster: 0, porro: 0, cheer: 0, protein: 0, roids: 0, party: 0 };
   const shop = Object.assign({ coins: START_COINS, inv: { ...INV0 }, protein: 0, boards: ['clasica'], shortsOwned: ['clasico'], board: 'clasica', shorts: 'clasico' }, load(SHOPKEY, {}));
   shop.inv = Object.assign({ ...INV0 }, shop.inv);
   const saveShop = () => store(SHOPKEY, shop);
@@ -2435,6 +2448,7 @@
     monster: { name: 'Lata energética', price: 3, desc: 'Prueba un boost de energía.' },
     porro:   { name: 'Porro',           price: 3, desc: 'Vuela por un rato.' },
     cheer:   { name: 'Porristas',       price: 3, desc: 'Llegan a animarlo y entrena con más ganas por 45 s.' },
+    party:   { name: 'Fiesta playera',  price: 4, desc: 'Luces, bola disco, música y baile en bikini por 45 s.' },
     protein: { name: 'Proteína',        price: 5, desc: 'Músculo permanente: como si hubiera estudiado 10 min más.' },
     roids:   { name: 'Anabólicos',      price: 4, desc: 'Un pinchazo y crece muchísimo… pero a los 45 s se desinfla.' },
   };
@@ -2460,7 +2474,8 @@
   const pomSVG = '<svg viewBox="-30 -14 60 28"><g transform="translate(-9 0)"><circle r="9" fill="#e03a3e"/><circle cx="-4" cy="-4" r="5" fill="#fff"/><circle cx="4.5" cy="3" r="5" fill="#ffd60a"/><circle cx="-3" cy="5" r="4.5" fill="#e03a3e"/><circle cx="5" cy="-4" r="4" fill="#fff"/></g><g transform="translate(11 2) scale(.8)"><circle r="9" fill="#fff"/><circle cx="-4" cy="-4" r="5" fill="#e03a3e"/><circle cx="4.5" cy="3" r="5" fill="#e03a3e"/><circle cx="5" cy="-4" r="4" fill="#ffd60a"/></g><text x="22" y="-6" font-size="8" fill="#fff">📣</text></svg>';
   const shakerSVG = '<svg viewBox="-30 -16 60 32"><g transform="rotate(-10) scale(1.05)"><path d="M-6.5 -8 L6.5 -8 L5.6 11 Q5.4 13 3.4 13 L-3.4 13 Q-5.4 13 -5.6 11 Z" fill="#2a2a2e" stroke="#55555c" stroke-width=".8"/><rect x="-7" y="-13" width="14" height="5.5" rx="1.6" fill="#e03a3e"/><rect x="-2" y="-16" width="4" height="3.4" rx="1" fill="#e03a3e"/><rect x="-5.6" y="-1.5" width="11.2" height="6" rx="1" fill="#f5f5f7"/><text x="0" y="3.2" text-anchor="middle" font-family="Inter, sans-serif" font-size="4.2" font-weight="900" fill="#1d1d1f">PROT</text></g><text x="13" y="4" font-size="9">💪</text></svg>';
   const syringeSVG = '<svg viewBox="-30 -16 60 32"><g transform="rotate(55) scale(.95)"><rect x="-.45" y="6" width=".9" height="11" fill="#c7ccd1"/><rect x="-3.4" y="-14" width="6.8" height="20.5" rx="1.4" fill="rgba(230,245,255,.6)" stroke="#9aa7b2" stroke-width=".8"/><rect x="-2.7" y="-6" width="5.4" height="11.8" rx=".8" fill="#46e07a"/><rect x="-.9" y="-25" width="1.8" height="12" fill="#8e98a2"/><rect x="-4.6" y="-26.5" width="9.2" height="2.4" rx="1" fill="#6e7882"/><rect x="-6" y="-14.6" width="12" height="1.8" rx=".9" fill="#9aa7b2"/></g></svg>';
-  const SP_ICONS = { monster: canSVG, porro: jointSVG, cheer: pomSVG, protein: shakerSVG, roids: syringeSVG };
+  const discoSVG = '<svg viewBox="-30 -16 60 32"><path d="M-30 16 L-6 -4 L-2 16 Z" fill="#ff2d3a" opacity=".35"/><path d="M30 16 L6 -4 L2 16 Z" fill="#2ec4b6" opacity=".35"/><line x1="0" y1="-16" x2="0" y2="-12" stroke="#aaa"/><circle cy="-2" r="10" fill="#c7ccd1"/><g fill="#fff" opacity=".8"><rect x="-6" y="-8" width="3" height="3"/><rect x="0" y="-6" width="3" height="3"/><rect x="-3" y="-1" width="3" height="3"/><rect x="3" y="1" width="3" height="3"/></g><text x="13" y="-6" font-size="8">🌴</text></svg>';
+  const SP_ICONS = { monster: canSVG, porro: jointSVG, cheer: pomSVG, protein: shakerSVG, roids: syringeSVG, party: discoSVG };
   let shopTab = 'esp';
   const canUseSpecial = () => S.mode === 'study' && !SPc && trans.u >= 1;
   function updateCoins(b) {
@@ -2563,6 +2578,7 @@
     jm: new Spr(0, 40, 12.6), ember: new Spr(.4, 60, 15),
     cb: new Spr(0, 160, 25), sip: new Spr(0, 60, 15.5), pump: new Spr(0, 70, 8.5), aura: new Spr(0, 20, 9),
     inj: new Spr(0, 70, 16), flex: new Spr(0, 55, 13), plunger: new Spr(0, 30, 11), cheerIn: new Spr(0, 22, 8.6),
+    party: new Spr(0, 6, 4.6), danceIn: new Spr(0, 20, 8.2), ball: new Spr(0, 30, 9),
     prot: new Spr((shop.protein || 0) * 600, 6, 4.9),
   };
   function startSpecial(type) {
@@ -2586,7 +2602,7 @@
   function specialFrame(dt) {
     const o = { sg: 1, hm: 0, tilt: 0, drink: 0, speed: 1, boost: 0, aura: 0, pump: 0, plates: false, cb: 0, beatN: 0, beatF: 0,
                 impact: null, sip: 0, haze: 0, beanie: 0, item: null, mouth: 0, ember: .4, crush: 0,
-                pumpTo: 1.55, auraCol: 'red', inj: 0, plunger: 0, flex: 0, cheer: 0, flame: 0, sparkle: false, deflate: false };
+                pumpTo: 1.55, auraCol: 'red', inj: 0, plunger: 0, flex: 0, cheer: 0, party: 0, flame: 0, sparkle: false, deflate: false };
     if (!SPc) return o;
     SPc.t += dt; SPc.T += dt;
     const t = SPc.t, T = SPc.T, f = SPc.f;
@@ -2605,6 +2621,10 @@
       }
       if (SPc.type === 'cheer') {
         o.cheer = T < L - 1.6 ? 1 : 0;
+        return o;
+      }
+      if (SPc.type === 'party') {
+        o.party = T < L - 1.8 ? 1 : 0;
         return o;
       }
       if (SPc.type === 'monster') {
@@ -2661,6 +2681,12 @@
       o.aura = o.boost ? 1 : (inR(T, 2.5, 42.6) ? .6 : 0);
       o.speed = o.boost ? 2.4 : 1;
       if (T > 4.9 && !f.s1) { f.s1 = true; toast('💉 ¡Modo bestia!', 1500); }
+      return o;
+    }
+    if (SPc.type === 'party') {
+      o.party = T < 43.2 ? 1 : 0;
+      o.speed = inR(T, 1.5, 43.2) ? 1.5 : 1;
+      if (T > 1.2 && !f.s1) { f.s1 = true; toast('🪩 ¡Fiesta playera!', 1800); }
       return o;
     }
     if (SPc.type === 'cheer') {
@@ -2808,6 +2834,172 @@
     }
   }
 
+
+  // ---------- Fiesta playera: luces, bola disco, música y bailarinas ----------
+  const BEAM_COLS = ['#ff2d3a', '#ff4fd8', '#2ec4b6', '#ffd60a', '#ff2d3a'];
+  const beams = BEAM_COLS.map((c, i) => {
+    const pth = document.createElementNS(NS, 'path');
+    pth.setAttribute('d', 'M0 0 L-34 330 L34 330 Z'); pth.setAttribute('fill', c); pth.setAttribute('opacity', '.16');
+    el.beams.appendChild(pth); return pth;
+  });
+  const refl = Array.from({ length: 18 }, (_, i) => {
+    const c = document.createElementNS(NS, 'circle'); c.setAttribute('r', 1.6 + (i % 3) * .6);
+    c.setAttribute('fill', BEAM_COLS[i % BEAM_COLS.length]); el.refl.appendChild(c); return c;
+  });
+  const facets = [];
+  for (let r = -2; r <= 2; r++) for (let k = 0; k < 8; k++) {
+    const q = document.createElementNS(NS, 'rect'); q.setAttribute('width', 3.6); q.setAttribute('height', 3.6); q.setAttribute('fill', '#ffffff');
+    el.ballFacets.appendChild(q); facets.push({ q, r, k });
+  }
+  function dancerMarkup(skin, hair, suit, pareo) {
+    const arm = side => `<g class="arm${side}" transform="translate(${side === 'L' ? -9.5 : 9.5} -65)"><rect x="-2.5" y="-1" width="5" height="24" rx="2.5" fill="${skin}"/><circle cy="24.5" r="3" fill="${skin}"/></g>`;
+    const leg = side => `<g class="leg${side}" transform="translate(${side === 'L' ? -4.5 : 4.5} -34)"><rect x="-3.3" y="0" width="6.6" height="31" rx="3.3" fill="${skin}"/><rect x="-4.8" y="29.5" width="9.6" height="3" rx="1.5" fill="${suit}"/></g>`;
+    const lei = [0, 1, 2, 3, 4, 5, 6].map(i => { const a = Math.PI * (.12 + i * .127); return `<circle cx="${(Math.cos(a) * 9).toFixed(1)}" cy="${(-69 + Math.sin(a) * 5).toFixed(1)}" r="2.2" fill="${['#ff4f8b', '#ffd60a', '#ff8a3d', '#ffffff'][i % 4]}"/>`; }).join('');
+    return `<ellipse class="sh" cx="0" cy="1" rx="15" ry="3" fill="#000" opacity=".22"/>
+      <g class="fig">
+        ${leg('L')}${leg('R')}
+        <rect x="-9.5" y="-69" width="19" height="31" rx="5" fill="${skin}"/>
+        <path d="M-9.6 -42 L9.6 -42 L8 -33.5 L-8 -33.5 Z" fill="${suit}"/>
+        <path d="M-10.5 -41 C-6 -38 -2 -37 2 -36 L-3 -18 C-8 -20 -12 -24 -13 -30 Z" fill="${pareo}" opacity=".92"/>
+        <path d="M-10.5 -41 L-3 -18" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
+        <rect x="-10" y="-64" width="20" height="7.5" rx="3.2" fill="${suit}"/>
+        <circle cx="0" cy="-60.3" r="1.6" fill="#fff" opacity=".85"/>
+        <rect x="-2.6" y="-75" width="5.2" height="8" fill="${skin}"/>
+        ${lei}
+        ${arm('L')}${arm('R')}
+        <g class="head" transform="translate(0 -84)">
+          <path d="M-10.5 -2 C-13 8 -12 15 -8 18 C-9 10 -8 4 -6 0 Z M10.5 -2 C13 8 12 15 8 18 C9 10 8 4 6 0 Z" fill="${hair}"/>
+          <circle r="10.2" fill="${skin}"/>
+          <path d="M-10.8 0 C-11.5 -13 11.5 -13 10.8 0 C7.5 -6.5 -7.5 -6.5 -10.8 0 Z" fill="${hair}"/>
+          <g transform="translate(-8 -6)"><circle r="2.4" fill="#ff4f8b"/><circle cx="2.6" cy="-1" r="2.1" fill="#ff4f8b"/><circle cx="1" cy="2.3" r="2.1" fill="#ff4f8b"/><circle cx=".9" cy=".3" r="1.2" fill="#ffd60a"/></g>
+          <rect x="-8" y="-1.5" width="6.6" height="4" rx="1.6" fill="#1d1d1f"/><rect x="1.4" y="-1.5" width="6.6" height="4" rx="1.6" fill="#1d1d1f"/>
+          <path d="M-1.4 -.2 H1.4" stroke="#1d1d1f" stroke-width="1.2"/>
+          <path d="M-3.2 5.2 Q0 8.2 3.2 5.2" stroke="#b5384a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        </g>
+      </g>`;
+  }
+  const DANCERS = [
+    { home: { x: 60, y: 258 }, side: -1, phase: 0, skin: '#e9b48f', hair: '#2b1a10', suit: '#e3262f', pareo: '#ff8a3d' },
+    { home: { x: 346, y: 258 }, side: 1, phase: Math.PI, skin: '#f3cfb0', hair: '#e8b04a', suit: '#e3262f', pareo: '#2ec4b6' },
+  ].map(c => {
+    const g = document.createElementNS(NS, 'g');
+    g.innerHTML = dancerMarkup(c.skin, c.hair, c.suit, c.pareo);
+    el.dancers.appendChild(g);
+    const q = sel => g.querySelector(sel);
+    return Object.assign(c, { g, fig: q('.fig'), sh: q('.sh'), aL: q('.armL'), aR: q('.armR'), lL: q('.legL'), lR: q('.legR'), head: q('.head') });
+  });
+
+  // música: un loop de 120 BPM sintetizado (bombo, hi-hat, palmas y bajo)
+  let music = null;
+  const BPM = 120, M_STEP = 60 / BPM / 2;
+  const ROOTS = [110, 87.31, 130.81, 98];   // La, Fa, Do, Sol
+  function mNoise(t, dur, type, freq, peak) {
+    const src = actx.createBufferSource(); src.buffer = nbuf(); src.loop = true;
+    const f = actx.createBiquadFilter(); f.type = type; f.frequency.value = freq;
+    const g = actx.createGain(); g.gain.setValueAtTime(peak, t); g.gain.exponentialRampToValueAtTime(.0004, t + dur);
+    src.connect(f).connect(g).connect(music.out); src.start(t, Math.random()); src.stop(t + dur + .03);
+  }
+  function mTone(t, dur, type, f0, f1, peak, lp) {
+    const o = actx.createOscillator(), g = actx.createGain(); o.type = type;
+    o.frequency.setValueAtTime(f0, t); if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur * .6);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + .005); g.gain.exponentialRampToValueAtTime(.0004, t + dur);
+    if (lp) { const f = actx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = lp; o.connect(f).connect(g); } else o.connect(g);
+    g.connect(music.out); o.start(t); o.stop(t + dur + .03);
+  }
+  function mStep(i, t) {
+    const bar = Math.floor(i / 8) % 4, root = ROOTS[bar];
+    if (i % 2 === 0) mTone(t, .28, 'sine', 150, 46, .9);                    // bombo en cada tiempo
+    if (i % 2 === 1) mNoise(t, .05, 'highpass', 8000, .22);                 // hi-hat a contratiempo
+    if (i % 8 === 2 || i % 8 === 6) mNoise(t, .16, 'bandpass', 1700, .32);   // palmas
+    if (i % 2 === 1) mTone(t, .2, 'sawtooth', root, root, .2, 520);         // bajo
+    if (i % 8 === 3 || i % 8 === 7) [1, 1.19, 1.5].forEach(k => mTone(t, .18, 'triangle', root * 4 * k, root * 4 * k, .035));
+  }
+  function startMusic() {
+    if (music || settings.mute || !settings.sound) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+      const out = actx.createGain(); out.gain.setValueAtTime(0, actx.currentTime); out.gain.linearRampToValueAtTime(.32, actx.currentTime + 1.2);
+      out.connect(actx.destination);
+      music = { out, next: actx.currentTime + .12, step: 0 };
+      music.timer = setInterval(() => {
+        if (!music) return;
+        while (music.next < actx.currentTime + .3) { mStep(music.step, music.next); music.next += M_STEP; music.step++; }
+      }, 60);
+    } catch (e) { music = null; }
+  }
+  function stopMusic() {
+    if (!music) return;
+    const m = music; music = null; clearInterval(m.timer);
+    try { const t = actx.currentTime; m.out.gain.cancelScheduledValues(t); m.out.gain.setValueAtTime(m.out.gain.value, t); m.out.gain.linearRampToValueAtTime(0, t + .9); setTimeout(() => m.out.disconnect(), 1200); } catch (e) {}
+  }
+
+  function drawParty(SX, dt, ts) {
+    const pv = clamp(sp2.party.step(SX.party, dt), 0, 1);
+    const din = clamp(sp2.danceIn.step(SX.party, dt), -.05, 1.05);
+    if (SX.party && pv > .3 && !settings.mute && settings.sound) startMusic();
+    if ((!SX.party || settings.mute || !settings.sound) && music) stopMusic();
+    if (pv < .002 && din < .002 && !SX.party) { el.partyBack.setAttribute('opacity', 0); el.dancers.setAttribute('opacity', 0); return; }
+    const beach = S.mode === 'rest';
+    el.partyBack.setAttribute('opacity', pv.toFixed(3));
+    el.partyDim.setAttribute('opacity', (beach ? .28 : .55).toFixed(2));
+    el.partyDim.setAttribute('fill', beach ? '#3a0a2e' : '#1b0716');
+    // bola disco que baja y gira
+    const by = -40 + 98 * clamp(sp2.ball.step(SX.party ? 1 : 0, dt), 0, 1.1);
+    el.discoBall.setAttribute('transform', `translate(200 ${f1(by)})`);
+    for (const f of facets) {
+      const a = (f.k / 8) * TAU + ts * 1.6, x = Math.sin(a) * 15 * Math.cos(f.r * .32), vis = Math.cos(a);
+      f.q.setAttribute('x', f1(x - 1.8)); f.q.setAttribute('y', f1(f.r * 5.6 - 1.8));
+      f.q.setAttribute('opacity', vis > 0 ? (.25 + .75 * vis * (.5 + .5 * Math.sin(ts * 9 + f.k))).toFixed(2) : 0);
+    }
+    // haces de luz que barren la sala
+    beams.forEach((b, i) => {
+      const ang = Math.sin(ts * (.7 + i * .13) + i * 1.7) * 38 + (i - 2) * 14;
+      b.setAttribute('transform', `translate(200 ${f1(by)}) rotate(${f1(ang)})`);
+      b.setAttribute('opacity', (.1 + .08 * (.5 + .5 * Math.sin(ts * 4 + i * 2))).toFixed(3));
+    });
+    // reflejos que giran por las paredes
+    refl.forEach((c, i) => {
+      const a = i * 2.39 + ts * .55, r = 70 + (i * 37) % 120;
+      c.setAttribute('cx', f1(200 + Math.cos(a) * r * 1.4)); c.setAttribute('cy', f1(by + 40 + Math.sin(a) * r * .6));
+      c.setAttribute('opacity', (.55 + .45 * Math.sin(ts * 3 + i)).toFixed(2));
+    });
+    // bailarinas
+    el.dancers.setAttribute('opacity', din > .002 ? 1 : 0);
+    const moving = Math.abs(sp2.danceIn.v) > .08;
+    const beat = ts * (BPM / 60) * Math.PI;      // medio ciclo por tiempo
+    for (const [i, c] of DANCERS.entries()) {
+      const x = c.home.x + c.side * (1 - din) * 150;
+      const ph = beat + c.phase;
+      const pattern = Math.floor(ts / 4 + i * .5) % 3;
+      let bob = 0, sway = 0, aL = 20, aR = -20, kL = 0, kR = 0, tilt = 0;
+      if (moving) {
+        const run = Math.sin(ts * 15 + i); kL = 26 * run; kR = -26 * run; aL = 25 - 30 * run; aR = -25 - 30 * run; bob = Math.abs(run) * 2;
+      } else if (pattern === 0) {                         // brazos arriba, de lado a lado
+        sway = Math.sin(ph) * 4; bob = Math.abs(Math.sin(ph)) * 4; tilt = Math.sin(ph) * 6;
+        aL = 160 + 14 * Math.sin(ph); aR = -160 + 14 * Math.sin(ph);
+        kL = 8 * Math.max(0, Math.sin(ph)); kR = -8 * Math.max(0, -Math.sin(ph));
+      } else if (pattern === 1) {                         // paso disco: señalar arriba y abajo
+        const up = Math.sin(ph) > 0;
+        bob = Math.abs(Math.sin(ph)) * 3; sway = Math.sin(ph) * 2;
+        aL = up ? 145 : 40; aR = up ? -40 : -145;
+        kL = up ? 10 : 0; kR = up ? 0 : -10;
+      } else {                                            // aplausos sobre la cabeza
+        bob = Math.abs(Math.sin(ph)) * 5;
+        const c2 = .5 + .5 * Math.sin(ph * 2);
+        aL = 168 + 10 * c2; aR = -168 - 10 * c2;
+      }
+      c.g.setAttribute('transform', `translate(${f1(x + sway)} ${f1(c.home.y)}) scale(.95)`);
+      c.fig.setAttribute('transform', `translate(0 ${f1(-bob)}) rotate(${f1(tilt * .4)} 0 -34)`);
+      c.sh.setAttribute('rx', f1(15 - bob * .4));
+      c.aL.setAttribute('transform', `translate(-9.5 -65) rotate(${f1(aL)})`);
+      c.aR.setAttribute('transform', `translate(9.5 -65) rotate(${f1(aR)})`);
+      c.lL.setAttribute('transform', `translate(-4.5 -34) rotate(${f1(kL)})`);
+      c.lR.setAttribute('transform', `translate(4.5 -34) rotate(${f1(kR)})`);
+      c.head.setAttribute('transform', `translate(0 -84) rotate(${f1(tilt)})`);
+    }
+  }
+
   // dibuja objetos, humo, aura, etc. después del tiburón
   function drawSpecialFx(SX, out, dt, ts, m) {
     lastMouth = out.mouth; lastHand = out.hN;
@@ -2880,6 +3072,7 @@
     // se desinfla: soplidos de aire
     if (SX.deflate) { steamAcc += dt * 14; while (steamAcc > 1) { steamAcc--; const a = rnd(0, TAU); emit(out.H.x - 30 + Math.cos(a) * 34, out.H.y - 4 + Math.sin(a) * 22, Math.cos(a) * 60, Math.sin(a) * 40 - 20, .6, rnd(1.6, 3), '#e8f6ff', -10, 1.8); } }
     drawCheer(SX, dt, ts);
+    drawParty(SX, dt, ts);
     // lata que sale volando
     if (canFlight) {
       const c = canFlight; c.t += dt; c.vy += 700 * dt; c.x += c.vx * dt; c.y += c.vy * dt; c.r += 720 * dt;
