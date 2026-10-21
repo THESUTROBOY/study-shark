@@ -559,6 +559,40 @@
   .toolbar { display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; }
   .stage-wrap { display: flex; justify-content: center; width: 100%; }
 
+
+  /* ---------- Isla (tipo Dynamic Island) ---------- */
+  .island {
+    position: relative; height: 38px; width: 150px; border-radius: 999px; overflow: hidden;
+    background: #000; color: #fff;
+    box-shadow: 0 10px 28px -12px rgba(0,0,0,.7), inset 0 0 0 1px rgba(255,255,255,.06);
+    transition: width .62s cubic-bezier(.3, 1.45, .45, 1), height .5s cubic-bezier(.3, 1.45, .45, 1), box-shadow 1s;
+    cursor: default; flex: none;
+  }
+  body[data-mode="rest"] .island { box-shadow: 0 10px 26px -12px rgba(16,60,80,.55); }
+  .isl-in {
+    position: absolute; top: 0; bottom: 0; left: 50%; translate: -50% 0; width: max-content; display: flex; align-items: center; gap: 8px; padding: 0 16px;
+    font-size: .88rem; font-weight: 650; letter-spacing: -.01em; white-space: nowrap;
+    transition: opacity .2s ease, filter .2s ease, transform .2s ease;
+  }
+  .isl-in.out { opacity: 0; filter: blur(5px); transform: scale(.86); }
+  .isl-in.pre { opacity: 0; filter: blur(5px); transform: scale(1.12); transition: none; }
+  .isl-ic { font-size: 1rem; line-height: 1; }
+  .isl-live { display: inline-flex; align-items: center; gap: 2px; height: 14px; margin-left: 2px; }
+  .isl-live i { display: block; width: 3px; height: 4px; border-radius: 2px; background: var(--a1); }
+  .island.on .isl-live i { animation: islBar .9s ease-in-out infinite; }
+  .island.on .isl-live i:nth-child(2) { animation-delay: -.3s; }
+  .island.on .isl-live i:nth-child(3) { animation-delay: -.6s; }
+  .island.on .isl-live i:nth-child(4) { animation-delay: -.15s; }
+  @keyframes islBar { 0%, 100% { height: 4px; } 50% { height: 14px; } }
+  body[data-mode="rest"] .island.on .isl-live i { background: #2fd1f0; animation-name: islWave; animation-duration: 1.8s; }
+  @keyframes islWave { 0%, 100% { height: 4px; transform: translateY(2px); } 50% { height: 11px; transform: translateY(-2px); } }
+  body.overtime .isl-live i { background: #ffb703 !important; }
+  .island:not(.on) .isl-live { display: none; }
+  .island.morph { animation: islMorph .62s cubic-bezier(.3, 1.45, .45, 1); }
+  @keyframes islMorph { 0% { transform: scale(1); } 35% { transform: scale(1.05, 1.12); } 100% { transform: scale(1); } }
+  .island.tap { animation: islTap .5s cubic-bezier(.3, 1.45, .45, 1); }
+  @keyframes islTap { 40% { transform: scale(1.08); } }
+
   /* ---------- Celular y tablet ---------- */
   .tch { display: none; }
   @media (hover: none) { .kb { display: none; } .tch { display: inline; } }
@@ -628,6 +662,8 @@
     .stage { width: min(47vw, calc(100dvh - 22px)); }
     .toolbar { grid-area: bar; gap: 8px; }
     .toolbar .seg { flex: 1; width: auto; max-width: none; }
+    .toolbar { justify-content: flex-start; }
+    .toolbar .island { margin-right: auto; }
     .toolbar .fab { position: static; flex: none; width: 38px; height: 38px; }
     .toolbar .fab svg { width: 17px; height: 17px; }
     .rotate { display: none !important; }
@@ -690,7 +726,7 @@
 <button class="rotate glass" id="rotateBtn" aria-label="Usar de lado"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="ph" x="8" y="3" width="8" height="15" rx="2"/><path class="ar" d="M3.5 13.5a8.5 8.5 0 0 0 7 7.2m-2.2 1.4 2.2-1.4-1.3-2.3"/></svg><span>Ponlo de lado</span></button>
 
 <main class="app">
-  <div class="toolbar" id="toolbar"><div class="seg glass reveal"><i class="seg-ind"></i><span data-k="study">🏋️ Estudio</span><span data-k="rest">🏄 Descanso</span></div></div>
+  <div class="toolbar reveal" id="toolbar"><div class="island" id="island" role="status" aria-live="polite"><div class="isl-in" id="islIn"><span class="isl-ic">🦈</span><span class="isl-tx">Study Shark</span><span class="isl-live"><i></i><i></i><i></i><i></i></span></div></div></div>
   <div class="toast" id="toast"></div>
 
   <div class="stage-wrap">
@@ -3618,6 +3654,42 @@
     const g = ev.target.closest && ev.target.closest('button.glass, .seg.glass');
     if (g) glassXY(g, ev);
   }, { passive: true });
+
+
+  // ---------- isla: muestra solo el modo actual y se transforma al cambiar ----------
+  const ISL = {
+    idle:  ['🦈', 'Study Shark'],
+    study: ['🏋️', 'Estudiando'],
+    rest:  ['🏄', 'Descansando'],
+  };
+  const island = $('island'), islIn = $('islIn');
+  let islMode = null, islT = 0;
+  function islFill(mode) {
+    const [ic, tx] = ISL[mode] || ISL.idle;
+    islIn.querySelector('.isl-ic').textContent = ic;
+    islIn.querySelector('.isl-tx').textContent = tx;
+    island.classList.toggle('on', mode !== 'idle');
+    // ancho justo para el contenido
+    const w = Math.ceil(islIn.scrollWidth) + 2;
+    island.style.width = Math.max(120, w) + 'px';
+  }
+  function setIsland(mode, instant) {
+    if (mode === islMode) return;
+    const first = islMode === null; islMode = mode;
+    clearTimeout(islT);
+    if (first || instant) { islFill(mode); return; }
+    islIn.classList.add('out');
+    island.classList.remove('morph'); void island.offsetWidth; island.classList.add('morph');
+    islT = setTimeout(() => {
+      islIn.classList.remove('out'); islIn.classList.add('pre');
+      islFill(mode);
+      void islIn.offsetWidth; islIn.classList.remove('pre');
+    }, 190);
+  }
+  new MutationObserver(() => setIsland(body.dataset.mode || 'idle')).observe(body, { attributes: true, attributeFilter: ['data-mode'] });
+  island.addEventListener('pointerdown', () => { island.classList.remove('tap'); void island.offsetWidth; island.classList.add('tap'); });
+  setIsland(body.dataset.mode || 'idle');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => islFill(islMode));
 
   setSub(START_TXT);
   updateButton();
