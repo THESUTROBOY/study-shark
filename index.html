@@ -53,7 +53,7 @@
   }
 
   /* ---------- Fondos de página ---------- */
-  .page-bg { position: fixed; inset: 0; z-index: 0; transition: opacity 1.4s var(--ease); pointer-events: none; }
+  .page-bg { position: fixed; inset: 0; z-index: 0; transition: opacity 1.5s cubic-bezier(.45, 0, .25, 1) .15s; pointer-events: none; will-change: opacity; }
   .page-gym {
     background:
       radial-gradient(55% 45% at 50% 38%, rgba(255,69,58,.20), transparent 70%),
@@ -120,30 +120,30 @@
     container-type: inline-size;
   }
   .stage-inner { position: absolute; inset: 0; }
-  body[data-mode="study"] .stage-inner { animation: breathe 3.2s ease-in-out infinite; }
-  body[data-mode="rest"] .stage-inner { animation: breathe 6s ease-in-out infinite; }
-  @keyframes breathe { 50% { transform: scale(1.012); } }
 
   .halo {
     position: absolute; inset: -6%; border-radius: 50%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--a1) 35%, transparent) 0%, transparent 65%);
-    filter: blur(20px); opacity: .55; transition: background 1s;
+    background: radial-gradient(circle, color-mix(in srgb, var(--a1) 32%, transparent) 0%, color-mix(in srgb, var(--a1) 14%, transparent) 38%, color-mix(in srgb, var(--a1) 4%, transparent) 56%, transparent 70%);
+    opacity: .6; transition: background 1s;
   }
   .ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .ring-track { fill: none; stroke: color-mix(in srgb, var(--text) 10%, transparent); stroke-width: 10; transition: stroke 1s; }
-  .ring-prog { fill: none; stroke: url(#ringGrad); stroke-width: 10; stroke-linecap: round; filter: drop-shadow(0 0 8px var(--a1)); }
+  .ring-prog { fill: none; stroke: url(#ringGrad); stroke-width: 10; stroke-linecap: round; }
+  .ring-glow { fill: none; stroke: var(--a1); stroke-width: 24; stroke-linecap: round; opacity: .16; transition: stroke 1s; }
+  .ring-glow.g2w { stroke-width: 16; opacity: .2; }
   .ring-dot { fill: #fff; filter: drop-shadow(0 0 10px var(--a1)) drop-shadow(0 0 4px var(--a2)); }
   .g1 { stop-color: var(--a1); transition: stop-color 1s; }
   .g2 { stop-color: var(--a2); transition: stop-color 1s; }
-  body.overtime .ring-prog { animation: warn 1.4s ease-in-out infinite; }
+  body.overtime .ring-prog, body.overtime .ring-glow { animation: warn 1.4s ease-in-out infinite; }
   @keyframes warn { 50% { opacity: .45; } }
 
   .window {
     position: absolute; inset: 5.5%; border-radius: 50%; overflow: hidden; clip-path: circle(50% at 50% 50%); isolation: isolate;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 30px 80px -30px rgba(0,0,0,.6);
     background: #141416;
   }
   .scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .win-shadow { position: absolute; inset: 5.5%; border-radius: 50%; box-shadow: 0 30px 80px -30px rgba(0,0,0,.6); pointer-events: none; }
+  .win-rim { position: absolute; inset: 5.5%; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); pointer-events: none; z-index: 2; }
 
   .readout {
     position: absolute; left: 0; right: 0; bottom: 6.5%;
@@ -185,7 +185,7 @@
   @keyframes subIn { from { opacity: 0; transform: translateY(6px); } }
 
   /* ---------- Escena ---------- */
-  .gym-only, .beach-only { transition: opacity 1.1s var(--ease); }
+  .gym-only, .beach-only { transition: opacity 1.2s cubic-bezier(.45, 0, .25, 1) .2s; }   /* el escenario cambia mientras salta */
   .beach-only { opacity: 0; }
   body[data-mode="rest"] .gym-only { opacity: 0; }
   body[data-mode="rest"] .beach-only { opacity: 1; }
@@ -492,12 +492,12 @@
 
   /* ---------- Vidrio líquido (estilo Apple) ---------- */
   :root {
-    --gl-a: rgba(255,255,255,.075); --gl-b: rgba(255,255,255,.02);
+    --gl-a: rgba(255,255,255,.085); --gl-b: rgba(255,255,255,.03);
     --gl-rim: rgba(255,255,255,.62); --gl-rim2: rgba(255,255,255,.13);
     --gl-glow: rgba(255,255,255,.22); --gl-spec: rgba(255,255,255,.34); --gl-sh: rgba(0,0,0,.5);
   }
   body[data-mode="rest"] {
-    --gl-a: rgba(255,255,255,.42); --gl-b: rgba(255,255,255,.16);
+    --gl-a: rgba(255,255,255,.52); --gl-b: rgba(255,255,255,.26);
     --gl-rim: rgba(255,255,255,1); --gl-rim2: rgba(255,255,255,.4);
     --gl-glow: rgba(255,255,255,.55); --gl-spec: rgba(255,255,255,.75); --gl-sh: rgba(16,60,80,.22);
   }
@@ -506,7 +506,7 @@
     isolation: isolate;
     background: linear-gradient(180deg, var(--gl-a), var(--gl-b));
     border: 0;
-    backdrop-filter: blur(14px) saturate(210%) brightness(1.06); -webkit-backdrop-filter: blur(14px) saturate(210%) brightness(1.06);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
     box-shadow:
       inset 0 1px 0 var(--gl-rim2),
       inset 0 -9px 16px -11px var(--gl-glow),
@@ -740,10 +740,14 @@
         </linearGradient>
       </defs>
       <circle class="ring-track" cx="220" cy="220" r="210"/>
+      <circle class="ring-glow" cx="220" cy="220" r="210" transform="rotate(-90 220 220)"/>
+      <circle class="ring-glow g2w" cx="220" cy="220" r="210" transform="rotate(-90 220 220)"/>
       <circle class="ring-prog" id="ringProg" cx="220" cy="220" r="210" transform="rotate(-90 220 220)"/>
       <circle class="ring-dot" id="ringDot" cx="220" cy="10" r="9"/>
     </svg>
 
+    <div class="win-shadow"></div>
+    <div class="win-rim"></div>
     <div class="window">
       <svg class="scene" viewBox="0 0 400 400" aria-label="Tiburón entrenando">
         <defs>
@@ -1156,6 +1160,8 @@
   const ringProg = $('ringProg'), ringDot = $('ringDot');
   const RC = 2 * Math.PI * 210;
   ringProg.style.strokeDasharray = RC;
+  const ringGlows = [...document.querySelectorAll('.ring-glow')];
+  ringGlows.forEach(g => g.style.strokeDasharray = RC);
 
   // ---------- Persistencia ----------
   const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch (e) { return d; } };
@@ -1194,13 +1200,18 @@
     const h = Math.floor(sec / 3600), m = Math.round(sec % 3600 / 60);
     return h ? `${h} h ${m} min` : `${m} min`;
   }
+  const DF_T = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const DF_D = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', year: 'numeric' });
   function fmtDate(ts, withTime) {
     if (!ts) return '';
-    return new Date(ts).toLocaleString('es-CL', withTime
-      ? { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }
-      : { day: 'numeric', month: 'short', year: 'numeric' });
+    return (withTime ? DF_T : DF_D).format(new Date(ts));
   }
-  const restart = (el, cls) => { el.classList.remove(cls); void el.getBoundingClientRect(); el.classList.add(cls); };
+  const restart = (el, cls) => {
+    el.classList.remove(cls);
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add(cls)));
+  };
+  // solo toca el DOM si el texto cambió (evita recalcular la página en cada cuadro)
+  const setTxt = (el, v) => { v = String(v); if (el.__t !== v) { el.__t = v; el.textContent = v; } };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   function mix(a, b, t) {
@@ -1802,14 +1813,19 @@
     else if (S.mode === 'rest') mainBtn.innerHTML = play + 'Volver al gym';
     else mainBtn.innerHTML = play + 'Play · Estudiar';
   }
+  let recKey = '';
   function renderRecords(e) {
     const live = S.mode === 'study' && rec.best > 0 && e > rec.best;
     const shown = live ? e : rec.best;
-    $('best').textContent = shown ? fmtShort(shown) : '—';
-    $('bestMeta').textContent = live ? '¡superándolo ahora!' : fmtDate(rec.bestDate);
+    const best = shown ? fmtShort(shown) : '—';
+    const key = [live, best, rec.bestDate, rec.last, rec.lastDate].join('|');
+    if (key === recKey) return;
+    recKey = key;
+    setTxt($('best'), best);
+    setTxt($('bestMeta'), live ? '¡superándolo ahora!' : fmtDate(rec.bestDate));
     $('stBest').classList.toggle('live', live);
-    $('last').textContent = rec.last ? fmtShort(rec.last) : '—';
-    $('lastMeta').textContent = fmtDate(rec.lastDate, true);
+    setTxt($('last'), rec.last ? fmtShort(rec.last) : '—');
+    setTxt($('lastMeta'), fmtDate(rec.lastDate, true));
   }
   function commitStudy(sec) {
     rec.last = sec; rec.lastDate = Date.now();
@@ -2161,8 +2177,9 @@
     }
     const out = drawChar(P, mVis, br, wv, dt, ts);
 
-    // cámara: acerca la toma durante las olas grandes
-    const z = spr.camZ.step(W.z, dt);
+    // cámara: acerca la toma durante las olas grandes y sigue el salto en los cambios de modo
+    const tz = TS.u < 1 ? Math.pow(Math.sin(Math.PI * TS.u), 1.3) : 0;
+    const z = spr.camZ.step(W.z * (1 + .085 * tz), dt);
     const k = clamp((z - 1) / .12, 0, 1), lim = 200 / Math.max(z, 1);
     const fx = spr.camX.step(clamp(200 + (P.H.x - 194), lim, 400 - lim), dt), fy = spr.camY.step(clamp(200 + (P.H.y - 165), 70, 400 - lim), dt);
     shakeV = Math.max(0, shakeV - dt * 12);
@@ -2224,8 +2241,9 @@
     }
 
     // barra de músculo
-    $('meter').style.width = (m * 100).toFixed(1) + '%';
-    $('kg').textContent = `${fmtKg(barKg(curLoad))} kg`;
+    const mw = (m * 100).toFixed(1) + '%';
+    if (mw !== S.lastMw) { S.lastMw = mw; $('meter').style.width = mw; }
+    setTxt($('kg'), `${fmtKg(barKg(curLoad))} kg`);
     const lvl = levelName(m);
     if (lvl !== lastLevel) {
       $('level').textContent = lvl;
@@ -2241,13 +2259,14 @@
     if (S.mode === 'study') f = (e % 60) / 60;
     else if (S.mode === 'rest') f = Math.min(e / S.restTarget, 1);
     ringProg.style.strokeDashoffset = RC * (1 - f);
+    for (const g of ringGlows) g.style.strokeDashoffset = RC * (1 - f);
     const a = f * 2 * Math.PI - Math.PI / 2;
     ringDot.setAttribute('cx', 220 + 210 * Math.cos(a));
     ringDot.setAttribute('cy', 220 + 210 * Math.sin(a));
 
     renderRecords(e);
-    $('cycles').textContent = S.cycles;
-    $('total').textContent = fmtShort(S.studyTotal + (S.mode === 'study' ? e : 0));
+    setTxt($('cycles'), S.cycles);
+    setTxt($('total'), fmtShort(S.studyTotal + (S.mode === 'study' ? e : 0)));
 
     if (S.mode === 'rest' && !S.alerted && e >= S.restTarget) {
       S.alerted = true; body.classList.add('overtime');
@@ -2255,7 +2274,8 @@
       chime([660, 880, 660], .15);
     }
 
-    document.title = S.mode === 'idle' ? 'Study Shark' : `${S.mode === 'study' ? '🏋️' : '🏄'} ${fmt(e)}`;
+    const ttl = S.mode === 'idle' ? 'Study Shark' : `${S.mode === 'study' ? '🏋️' : '🏄'} ${fmt(e)}`;
+    if (ttl !== S.lastTitle) { S.lastTitle = ttl; document.title = ttl; }
     requestAnimationFrame(frame);
   }
 
@@ -3643,7 +3663,7 @@
     glassXY(g, ev); g.classList.remove('jelly'); g.classList.add('lit');
     const move = e => glassXY(g, e);
     const up = () => {
-      g.classList.remove('lit'); void g.offsetWidth; g.classList.add('jelly');
+      g.classList.remove('lit'); restart(g, 'jelly');
       setTimeout(() => g.classList.remove('jelly'), 650);
       removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
     };
@@ -3664,14 +3684,20 @@
   };
   const island = $('island'), islIn = $('islIn');
   let islMode = null, islT = 0;
-  function islFill(mode) {
+  const ISLW = {};
+  function islPut(mode) {
     const [ic, tx] = ISL[mode] || ISL.idle;
     islIn.querySelector('.isl-ic').textContent = ic;
     islIn.querySelector('.isl-tx').textContent = tx;
     island.classList.toggle('on', mode !== 'idle');
-    // ancho justo para el contenido
-    const w = Math.ceil(islIn.scrollWidth) + 2;
-    island.style.width = Math.max(120, w) + 'px';
+  }
+  function islMeasure() {           // se mide una sola vez (y al cargar la fuente)
+    for (const k of Object.keys(ISL)) { islPut(k); ISLW[k] = Math.max(120, Math.ceil(islIn.scrollWidth) + 2); }
+    islPut(islMode || 'idle'); island.style.width = ISLW[islMode || 'idle'] + 'px';
+  }
+  function islFill(mode) {
+    islPut(mode);
+    island.style.width = (ISLW[mode] || 150) + 'px';
   }
   function setIsland(mode, instant) {
     if (mode === islMode) return;
@@ -3679,17 +3705,19 @@
     clearTimeout(islT);
     if (first || instant) { islFill(mode); return; }
     islIn.classList.add('out');
-    island.classList.remove('morph'); void island.offsetWidth; island.classList.add('morph');
+    restart(island, 'morph');
+    island.style.width = (ISLW[mode] || 150) + 'px';     // la isla cambia de tamaño mientras el texto se difumina
     islT = setTimeout(() => {
       islIn.classList.remove('out'); islIn.classList.add('pre');
-      islFill(mode);
-      void islIn.offsetWidth; islIn.classList.remove('pre');
+      islPut(mode);
+      requestAnimationFrame(() => requestAnimationFrame(() => islIn.classList.remove('pre')));
     }, 190);
   }
   new MutationObserver(() => setIsland(body.dataset.mode || 'idle')).observe(body, { attributes: true, attributeFilter: ['data-mode'] });
-  island.addEventListener('pointerdown', () => { island.classList.remove('tap'); void island.offsetWidth; island.classList.add('tap'); });
+  island.addEventListener('pointerdown', () => restart(island, 'tap'));
+  islMeasure();
   setIsland(body.dataset.mode || 'idle');
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => islFill(islMode));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(islMeasure);
 
   setSub(START_TXT);
   updateButton();
