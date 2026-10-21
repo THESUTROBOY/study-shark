@@ -265,10 +265,7 @@
     background: linear-gradient(135deg, var(--a1), var(--a2));
     box-shadow: 0 12px 30px -10px var(--a1);
   }
-  #reset {
-    background: var(--card); color: var(--text); border: 1px solid var(--border);
-    backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
-  }
+  #reset { color: var(--text); }
 
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: min(92vw, 640px); }
   @media (max-width: 560px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -492,6 +489,76 @@
   .btns button { font-size: .85rem; padding: 10px 16px; background: var(--tile); color: var(--text); }
   .btns button.danger { color: #ff453a; }
 
+
+  /* ---------- Vidrio líquido (estilo Apple) ---------- */
+  :root {
+    --gl-a: rgba(255,255,255,.075); --gl-b: rgba(255,255,255,.02);
+    --gl-rim: rgba(255,255,255,.62); --gl-rim2: rgba(255,255,255,.13);
+    --gl-glow: rgba(255,255,255,.22); --gl-spec: rgba(255,255,255,.34); --gl-sh: rgba(0,0,0,.5);
+  }
+  body[data-mode="rest"] {
+    --gl-a: rgba(255,255,255,.42); --gl-b: rgba(255,255,255,.16);
+    --gl-rim: rgba(255,255,255,1); --gl-rim2: rgba(255,255,255,.4);
+    --gl-glow: rgba(255,255,255,.55); --gl-spec: rgba(255,255,255,.75); --gl-sh: rgba(16,60,80,.22);
+  }
+  :where(.glass) { position: relative; }
+  .glass {
+    isolation: isolate;
+    background: linear-gradient(180deg, var(--gl-a), var(--gl-b));
+    border: 0;
+    backdrop-filter: blur(14px) saturate(210%) brightness(1.06); -webkit-backdrop-filter: blur(14px) saturate(210%) brightness(1.06);
+    box-shadow:
+      inset 0 1px 0 var(--gl-rim2),
+      inset 0 -9px 16px -11px var(--gl-glow),
+      inset 0 7px 12px -10px var(--gl-glow),
+      0 12px 30px -14px var(--gl-sh),
+      0 2px 7px -3px var(--gl-sh);
+    transition: transform .5s var(--spring), box-shadow .4s, background 1s;
+  }
+  /* borde que refleja la luz (arriba-izq y abajo-der) */
+  .glass::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; padding: 1.2px; pointer-events: none;
+    background: linear-gradient(135deg, var(--gl-rim) 0%, var(--gl-rim2) 26%, transparent 48%, var(--gl-rim2) 74%, var(--gl-rim) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    transition: opacity .4s;
+  }
+  /* brillo que sigue al dedo */
+  .glass::after {
+    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(90px 70px at var(--mx, 50%) var(--my, -30%), var(--gl-spec), transparent 72%);
+    opacity: .5; transition: opacity .45s var(--ease);
+  }
+  .glass.lit::after { opacity: 1; transition-duration: .12s; }
+  .glass.lit { box-shadow: inset 0 1px 0 var(--gl-rim2), inset 0 -10px 18px -10px var(--gl-spec), inset 0 8px 14px -10px var(--gl-spec), 0 16px 34px -14px var(--gl-sh), 0 2px 7px -3px var(--gl-sh); }
+  button.glass:active, .coins.glass:active { transform: scale(1.07); }
+  .glass.jelly { animation: jelly .62s var(--ease); }
+  @keyframes jelly { 0% { transform: scale(1.07); } 30% { transform: scale(.965, 1.035); } 58% { transform: scale(1.018, .985); } 80% { transform: scale(.996, 1.004); } 100% { transform: none; } }
+  /* botón principal: vidrio teñido */
+  #main.glass {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--a1) 90%, transparent), color-mix(in srgb, var(--a2) 82%, transparent));
+    --gl-rim: rgba(255,255,255,.85); --gl-rim2: rgba(255,255,255,.28); --gl-spec: rgba(255,255,255,.5);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.5), inset 0 -10px 18px -10px rgba(255,255,255,.5), inset 0 8px 14px -10px rgba(255,255,255,.35), 0 14px 32px -12px var(--a1);
+    text-shadow: 0 1px 2px rgba(0,0,0,.18);
+  }
+  #main.glass.lit { box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -12px 20px -10px rgba(255,255,255,.65), inset 0 8px 14px -10px rgba(255,255,255,.45), 0 18px 40px -12px var(--a1); }
+  .seg-ind { box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -7px 12px -8px rgba(255,255,255,.55), 0 4px 14px -4px var(--a1); }
+  .musclebar.glass::after, .stat.glass::after { display: none; }
+  .stat.glass.live { box-shadow: inset 0 0 0 1.5px #ff9f0a, 0 12px 30px -14px var(--gl-sh); }
+
+  /* botón para girar el teléfono */
+  .rotate {
+    position: fixed; top: calc(16px + env(safe-area-inset-top)); left: 50%; translate: -50% 0; z-index: 20;
+    height: 42px; padding: 0 14px 0 11px; border-radius: 21px; color: var(--text);
+    font-size: .8rem; font-weight: 700; gap: 7px; display: none; white-space: nowrap;
+  }
+  .rotate svg { width: 20px; height: 20px; fill: none; overflow: visible; }
+  .rotate .ph { transform-box: fill-box; transform-origin: center; animation: phoneTurn 3.6s var(--ease) infinite; }
+  .rotate .ar { opacity: .75; }
+  @keyframes phoneTurn { 0%, 30% { transform: none; } 50%, 78% { transform: rotate(-90deg); } 100% { transform: none; } }
+  .toolbar { display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; }
+  .stage-wrap { display: flex; justify-content: center; width: 100%; }
+
   /* ---------- Celular y tablet ---------- */
   .tch { display: none; }
   @media (hover: none) { .kb { display: none; } .tch { display: inline; } }
@@ -512,6 +579,35 @@
     .coins { padding: 0 11px 0 7px; font-size: .9rem; }
     .stats { gap: 8px; }
   }
+
+  /* celular vertical: todo cabe en la pantalla, sin bajar */
+  @media (max-width: 640px) and (orientation: portrait) {
+    html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+    .app {
+      height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; justify-content: flex-start;
+      gap: clamp(8px, 1.5dvh, 14px);
+      padding-top: calc(68px + env(safe-area-inset-top)); padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    }
+    .stage-wrap { flex: 1 1 0; min-height: 0; container-type: size; display: grid; place-items: center; }
+    .stage { width: min(100cqw, 100cqh, 560px); }
+    .musclebar { padding: 8px 14px 9px; gap: 4px; }
+    .mb-title { font-size: .6rem; }
+    .controls { flex-wrap: nowrap; }
+    .controls button { padding: 13px 16px; }
+    .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .stat { padding: 7px 9px 8px; border-radius: 14px; min-width: 0; }
+    .stat .lbl { font-size: .56rem; letter-spacing: .03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .stat .val { font-size: 1rem; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .stat .meta { display: none; }
+    .hint { display: none; }
+  }
+  @media (max-width: 640px) and (orientation: portrait) and (hover: none) { .rotate { display: inline-flex; } }
+  @media (max-width: 640px) and (orientation: portrait) and (max-height: 700px) {
+    .app { padding-top: calc(62px + env(safe-area-inset-top)); gap: 7px; }
+    .seg span { padding: 7px 0; }
+    .mb-title { display: none; }
+    .controls button { padding: 11px 14px; }
+  }
   /* tablet */
   @media (min-width: 700px) and (min-height: 700px) and (hover: none) {
     .stage { width: min(78vw, 56vh, 600px); }
@@ -519,16 +615,22 @@
   /* celular horizontal: círculo a la izquierda; reloj grande y controles a la derecha */
   .side-clock { display: none; }
   @media (orientation: landscape) and (max-height: 520px) {
+    html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
     .app {
-      display: grid; align-content: center; justify-content: center; column-gap: 26px; row-gap: 7px;
-      grid-template-columns: auto minmax(270px, 400px);
-      grid-template-areas: "stage seg" "stage clock" "stage ctrl" "stage muscle" "stage stats";
+      display: grid; align-content: center; justify-content: center; column-gap: clamp(18px, 3.4vw, 40px); row-gap: 8px;
+      grid-template-columns: auto minmax(270px, 410px);
+      grid-template-areas: "stage bar" "stage clock" "stage ctrl" "stage muscle" "stage stats";
       padding-top: calc(10px + env(safe-area-inset-top)); padding-bottom: calc(10px + env(safe-area-inset-bottom));
-      padding-left: calc(48px + env(safe-area-inset-left)); padding-right: calc(112px + env(safe-area-inset-right));
+      padding-left: calc(20px + env(safe-area-inset-left)); padding-right: calc(18px + env(safe-area-inset-right));
       height: 100vh; height: 100dvh; overflow: hidden;
     }
-    .stage { grid-area: stage; width: min(43vw, calc(100dvh - 20px)); align-self: center; }
-    .seg { grid-area: seg; justify-self: center; width: 100%; max-width: 270px; }
+    .stage-wrap { grid-area: stage; display: block; width: auto; align-self: center; }
+    .stage { width: min(47vw, calc(100dvh - 22px)); }
+    .toolbar { grid-area: bar; gap: 8px; }
+    .toolbar .seg { flex: 1; width: auto; max-width: none; }
+    .toolbar .fab { position: static; flex: none; width: 38px; height: 38px; }
+    .toolbar .fab svg { width: 17px; height: 17px; }
+    .rotate { display: none !important; }
     .side-clock { grid-area: clock; display: block; width: 100%; container-type: inline-size; }
     .side-clock .readout { position: static; }
     .side-clock .flipclock { gap: 4.5cqw; perspective: 160cqw; }
@@ -575,20 +677,23 @@
 <div class="page-bg page-gym"></div>
 <div class="page-bg page-beach"></div>
 
-<button class="coins" id="coinChip" title="Tienda · Shark Coins" aria-label="Abrir tienda"><span class="coin">S</span><span id="coinN">0</span></button>
-<button class="fab bell" id="alertsBtn" title="Avisos de tiempo" aria-label="Avisos de tiempo">
+<button class="coins glass" id="coinChip" title="Tienda · Shark Coins" aria-label="Abrir tienda"><span class="coin">S</span><span id="coinN">0</span></button>
+<button class="fab bell glass" id="alertsBtn" title="Avisos de tiempo" aria-label="Avisos de tiempo">
   <svg class="ic-mute" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66a7 7 0 0 0-2.3.9l10.8 10.8V16ZM3.7 2.3 2.3 3.7l3.2 3.2A7 7 0 0 0 5 11v5l-1.6 1.6A.8.8 0 0 0 4 19h12.6l3.7 3.7 1.4-1.4Z"/></svg>
   <svg class="ic-bell" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-1.6 1.6A.8.8 0 0 0 4 19h16a.8.8 0 0 0 .6-1.4Z"/></svg>
   <span class="badge" id="alertBadge" hidden>0</span>
 </button>
-<button class="fab" id="statsBtn" title="Estadísticas" aria-label="Abrir estadísticas">
+<button class="fab glass" id="statsBtn" title="Estadísticas" aria-label="Abrir estadísticas">
   <svg viewBox="0 0 24 24"><rect x="4" y="12" width="4" height="8" rx="1.5"/><rect x="10" y="7" width="4" height="13" rx="1.5"/><rect x="16" y="3" width="4" height="17" rx="1.5"/></svg>
 </button>
 
+<button class="rotate glass" id="rotateBtn" aria-label="Usar de lado"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="ph" x="8" y="3" width="8" height="15" rx="2"/><path class="ar" d="M3.5 13.5a8.5 8.5 0 0 0 7 7.2m-2.2 1.4 2.2-1.4-1.3-2.3"/></svg><span>Ponlo de lado</span></button>
+
 <main class="app">
-  <div class="seg reveal"><i class="seg-ind"></i><span data-k="study">🏋️ Estudio</span><span data-k="rest">🏄 Descanso</span></div>
+  <div class="toolbar" id="toolbar"><div class="seg glass reveal"><i class="seg-ind"></i><span data-k="study">🏋️ Estudio</span><span data-k="rest">🏄 Descanso</span></div></div>
   <div class="toast" id="toast"></div>
 
+  <div class="stage-wrap">
   <div class="stage reveal" style="animation-delay:.08s">
    <div class="stage-inner">
     <div class="halo"></div>
@@ -924,9 +1029,10 @@
     </div>
    </div>
   </div>
+  </div>
 
   <div class="side-clock" id="sideClock"></div>
-  <div class="musclebar reveal" style="animation-delay:.18s">
+  <div class="musclebar glass reveal" style="animation-delay:.18s">
     <div class="mb-title">Crecimiento del Shark</div>
     <div class="mb-row">
       <span>💪</span><b id="level">Perra flaca</b>
@@ -936,15 +1042,15 @@
   </div>
 
   <div class="controls reveal" style="animation-delay:.26s">
-    <button id="main"></button>
-    <button id="reset"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>Reiniciar</button>
+    <button id="main" class="glass"></button>
+    <button id="reset" class="glass"><svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>Reiniciar</button>
   </div>
 
   <div class="stats reveal" style="animation-delay:.34s">
-    <div class="stat" id="stBest"><div class="lbl">🏆 Récord</div><div class="val" id="best">—</div><div class="meta" id="bestMeta"></div></div>
-    <div class="stat" id="stLast"><div class="lbl">⏱ Última vez</div><div class="val" id="last">—</div><div class="meta" id="lastMeta"></div></div>
-    <div class="stat" id="stCycles"><div class="lbl">🔁 Ciclos</div><div class="val" id="cycles">0</div><div class="meta">esta sesión</div></div>
-    <div class="stat" id="stTotal"><div class="lbl">📚 Total</div><div class="val" id="total">0:00</div><div class="meta">esta sesión</div></div>
+    <div class="stat glass" id="stBest"><div class="lbl">🏆 Récord</div><div class="val" id="best">—</div><div class="meta" id="bestMeta"></div></div>
+    <div class="stat glass" id="stLast"><div class="lbl">⏱ Última vez</div><div class="val" id="last">—</div><div class="meta" id="lastMeta"></div></div>
+    <div class="stat glass" id="stCycles"><div class="lbl">🔁 Ciclos</div><div class="val" id="cycles">0</div><div class="meta">esta sesión</div></div>
+    <div class="stat glass" id="stTotal"><div class="lbl">📚 Total</div><div class="val" id="total">0:00</div><div class="meta">esta sesión</div></div>
   </div>
 
   <p class="hint reveal" style="animation-delay:.42s"><span class="kb"><kbd>Espacio</kbd> alterna estudio y descanso · </span><a id="clearRec">Borrar récords</a></p>
@@ -2236,7 +2342,7 @@
       <section class="sec">
         <h3>Ajustes</h3>
         <label class="set">Sonidos<span class="switch"><input type="checkbox" id="optSound" ${settings.sound ? 'checked' : ''}><i></i></span></label>
-        <div class="btns"><button id="exportCsv">Exportar CSV</button><button class="danger" id="clearLog">Borrar historial</button></div>
+        <div class="btns"><button id="exportCsv">Exportar CSV</button><button class="danger" id="clearLog">Borrar historial</button><button class="danger" id="clearRec2">Borrar récords</button></div>
       </section>
       <section class="sec">
         <h3>Tu progreso</h3>
@@ -2268,6 +2374,7 @@
       const csv = 'tipo,inicio,duracion_segundos\n' + log.map(b => `${b.t === 's' ? 'estudio' : 'descanso'},${new Date(b.start).toISOString()},${b.dur}`).join('\n');
       saveText('study-shark-historial.csv', csv, 'text/csv', '⬇️ Historial exportado');
     });
+    $('clearRec2').addEventListener('click', () => $('clearRec').click());
     $('clearLog').addEventListener('click', () => {
       askConfirm('¿Borrar todo el historial de sesiones?', 'Borrar').then(ok => { if (ok) { log = []; saveLog(); renderStats(); } });
     });
@@ -3455,8 +3562,62 @@
     const dest = mqLand.matches ? $('sideClock') : document.querySelector('.window');
     if (r && r.parentNode !== dest) dest.appendChild(r);
   }
-  mqLand.addEventListener ? mqLand.addEventListener('change', placeReadout) : mqLand.addListener(placeReadout);
-  placeReadout();
+  // en horizontal los botones de avisos y estadísticas pasan a la barra de arriba del panel
+  const appEl = document.querySelector('main.app');
+  function placeChrome() {
+    const tb = $('toolbar'), land = mqLand.matches;
+    for (const id of ['alertsBtn', 'statsBtn']) {
+      const b = $(id);
+      if (land) { if (b.parentNode !== tb) tb.appendChild(b); }
+      else if (b.parentNode === tb) document.body.insertBefore(b, appEl);
+    }
+  }
+  let landToast = false;
+  function onOrient() {
+    placeReadout(); placeChrome();
+    if (mqLand.matches && !landToast) { landToast = true; setTimeout(() => toast('🎯 Modo de lado: reloj grande', 1800), 400); }
+  }
+  mqLand.addEventListener ? mqLand.addEventListener('change', onOrient) : mqLand.addListener(onOrient);
+  placeReadout(); placeChrome();
+
+  // botón "Ponlo de lado": intenta girar solo (Android); si no se puede, explica cómo
+  $('rotateBtn').addEventListener('click', async () => {
+    $('rotateBtn').blur();
+    try {
+      const de = document.documentElement;
+      if (!screen.orientation || !screen.orientation.lock) throw 0;
+      let fs = false;
+      if (!document.fullscreenElement && de.requestFullscreen) { await de.requestFullscreen({ navigationUI: 'hide' }); fs = true; }
+      try { await screen.orientation.lock('landscape'); }
+      catch (e) { if (fs && document.exitFullscreen) document.exitFullscreen().catch(() => {}); throw e; }
+    } catch (e) {
+      toast('📱 Gira el celu de lado · si no gira, quita el bloqueo de rotación', 3400);
+    }
+  });
+
+  // vidrio líquido: el brillo sigue al dedo y al soltar rebota como gel
+  function glassXY(g, ev) {
+    const r = g.getBoundingClientRect();
+    g.style.setProperty('--mx', ((ev.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+    g.style.setProperty('--my', ((ev.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+  }
+  document.addEventListener('pointerdown', ev => {
+    const g = ev.target.closest && ev.target.closest('button.glass, .seg.glass');
+    if (!g) return;
+    glassXY(g, ev); g.classList.remove('jelly'); g.classList.add('lit');
+    const move = e => glassXY(g, e);
+    const up = () => {
+      g.classList.remove('lit'); void g.offsetWidth; g.classList.add('jelly');
+      setTimeout(() => g.classList.remove('jelly'), 650);
+      removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+    };
+    addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+  }, { passive: true });
+  document.addEventListener('pointermove', ev => {
+    if (ev.pointerType !== 'mouse') return;
+    const g = ev.target.closest && ev.target.closest('button.glass, .seg.glass');
+    if (g) glassXY(g, ev);
+  }, { passive: true });
 
   setSub(START_TXT);
   updateButton();
